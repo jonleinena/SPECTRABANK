@@ -5,7 +5,7 @@
 #include "../db/getData.h"
 #include "../db/postData.h"
 
-int main(void)
+void loginProfesional()
 {
     int resultLogin = 0;
     char *email;
@@ -24,6 +24,7 @@ int main(void)
         printf("Introduce contrasenya: ");
         fgets(contrasenya, 18, stdin);
         sscanf(contrasenya, "%c");
+        fflush(stdin);
         *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
 
         resultLogin = getLoginProfesional(email, contrasenya);
@@ -40,5 +41,4 @@ int main(void)
     email = NULL;
     free(contrasenya);
     contrasenya = NULL;
-    return 0;
 }
