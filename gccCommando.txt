@@ -1,0 +1,1 @@
+gcc main/main.c lib/sqlite3/sqlite3.h lib/sqlite3/sqlite3.c db/dbConnection.h db/dbConnection.c db/getData.h db/getData.c db/postData.h db/postData.c profesional/menuProfesional.h profesional/menuProfesional.c structures/structures.h -o 

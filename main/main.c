@@ -4,9 +4,14 @@
 #include "../login/loginProfesional.h"
 #include "../db/getData.h"
 #include "../db/postData.h"
+#include "../db/dbConnection.h"
 
 int main(void)
 {
+    if (startConn(db))
+    {
+        return 0;
+    }
     char *input;
     input = malloc(sizeof(char));
     do

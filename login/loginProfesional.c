@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-// #include "loginProfesional.h"
+#include "loginProfesional.h"
 #include "../db/getData.h"
 #include "../db/postData.h"
+#include "../lib/sqlite3/sqlite3.h"
+#include "../db/dbConnection.h"
 
 void loginProfesional()
 {
@@ -27,7 +29,12 @@ void loginProfesional()
         fflush(stdin);
         *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
 
-        resultLogin = getLoginProfesional(email, contrasenya);
+        if (startConn != SQLITE_OK)
+        {
+            resultLogin = getLoginProfesional(email, contrasenya, db);
+        }
+        else
+            break;
 
         if (resultLogin == 0)
         {

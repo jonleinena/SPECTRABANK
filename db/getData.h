@@ -1,6 +1,11 @@
+#include "../structures/structures.h"
+#include "../lib/sqlite3/sqlite3.h"
 #ifndef getData
 #define getData
 
-int getLoginProfesional(char *email, char *contrasenya);
+int startConn();
+
+int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
+Profesional getInfoProfesional(char *email, sqlite3 *db);
 
 #endif

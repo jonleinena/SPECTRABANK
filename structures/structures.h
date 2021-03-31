@@ -1,7 +1,8 @@
-#ifndef structures.h
-#define structurres.h
+#ifndef structures_h
+#define structures_h
 
-typedef struct{
+typedef struct
+{
     char dni[10];
     char contrasenya[11];
     char nombreApellidos[30];
@@ -10,11 +11,13 @@ typedef struct{
     char email[30];
 } Usuario;
 
-typedef struct{
+typedef struct
+{
     Usuario user;
     char domicilio[30];
 } Cliente;
-typedef struct{
+typedef struct
+{
     Usuario user;
     char idProfesional[7];
 } Profesional;

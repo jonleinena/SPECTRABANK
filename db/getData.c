@@ -2,26 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../lib/sqlite3/sqlite3.h"
+#include "dbConnection.h"
 #include "getData.h"
 
-int getLoginProfesional(char *email, char *contrasenya)
+int startConn();
+
+int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
+
+Profesional getInfoProfesional(char *email, sqlite3 *db);
+
+int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db) //si rc sobra habra que declararlo dentro y desde loginProfesional hacer una condición que lo que devuelve startConn !=1, es es
 {
-    int comprobacionContrasenya = 0; //0 si es igual, 1 sino
-    sqlite3 *db;
+    int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
+    int rc;
+
     char *err_msg = 0;
     sqlite3_stmt *res;
-
-    int rc = sqlite3_open("db/SpectreBankDB.db", &db);
-
-    if (rc != SQLITE_OK)
-    {
-
-        fprintf(stderr, "Cannot open database: %s\n",
-                sqlite3_errmsg(db));
-        sqlite3_close(db);
-
-        return 1;
-    }
 
     //TODO - OPTIMIZAR ESTO
     char *sql = "SELECT CONTRASENYA FROM PROFESIONAL WHERE CORREO = ?";
@@ -47,8 +43,17 @@ int getLoginProfesional(char *email, char *contrasenya)
     }
     else
         comprobacionContrasenya = 1;
+    {
+    }
 
     sqlite3_close(db);
 
     return comprobacionContrasenya;
 }
+/**
+Profesional getInfoProfesional(char *email)
+{
+
+    return void;
+}
+*/
