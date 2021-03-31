@@ -5,17 +5,14 @@
 #include "dbConnection.h"
 #include "getData.h"
 
-int startConn();
-
 int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
 
 Profesional getInfoProfesional(char *email, sqlite3 *db);
 
-int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db) //si rc sobra habra que declararlo dentro y desde loginProfesional hacer una condición que lo que devuelve startConn !=1, es es
+int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db)
 {
     int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
     int rc;
-
     char *err_msg = 0;
     sqlite3_stmt *res;
 
@@ -26,12 +23,10 @@ int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db) //si rc sob
 
     if (rc == SQLITE_OK)
     {
-
         sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {
-
         fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
     }
 
@@ -43,10 +38,6 @@ int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db) //si rc sob
     }
     else
         comprobacionContrasenya = 1;
-    {
-    }
-
-    sqlite3_close(db);
 
     return comprobacionContrasenya;
 }

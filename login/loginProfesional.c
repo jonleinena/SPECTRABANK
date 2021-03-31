@@ -6,8 +6,9 @@
 #include "../db/postData.h"
 #include "../lib/sqlite3/sqlite3.h"
 #include "../db/dbConnection.h"
+#include "../utils/colors.h"
 
-void loginProfesional()
+void loginProfesional(void)
 {
     int resultLogin = 0;
     char *email;
@@ -23,7 +24,7 @@ void loginProfesional()
         sscanf(email, "%c");
         fflush(stdin);
 
-        printf("Introduce contrasenya: ");
+        printf("Introduce contrase%ca: ", 164);
         fgets(contrasenya, 18, stdin);
         sscanf(contrasenya, "%c");
         fflush(stdin);
@@ -38,10 +39,10 @@ void loginProfesional()
 
         if (resultLogin == 0)
         {
-            printf("INICIO DE SESION CORRECTO\n");
+            printf("%sINICIO DE SESION CORRECTO\n", FGREN);
         }
         else
-            printf("Error en el inicio de sesion\n");
+            printf("%sError en el inicio de sesion\n", FRED);
     } while (resultLogin != 0);
 
     free(email);

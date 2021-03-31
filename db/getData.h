@@ -1,5 +1,6 @@
 #include "../structures/structures.h"
 #include "../lib/sqlite3/sqlite3.h"
+#include "dbConnection.h"
 #ifndef getData
 #define getData
 
