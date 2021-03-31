@@ -18,8 +18,8 @@ typedef struct
 } Cliente;
 typedef struct
 {
-    Usuario user;
     char idProfesional[7];
+    Usuario *user;
 } Profesional;
 
 #endif

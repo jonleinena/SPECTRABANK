@@ -17,20 +17,22 @@ int main(void)
     system("cls"); //Esta limpieza se ejecuta para el buen funcionamiento de la apariencia de la consola
     char *input;
     input = malloc(sizeof(char));
+
+    printf("%s%s"
+           "                                                            \n"
+           "                                                            \n"
+           "                  BIENVENIDO A SPECTRABANK                  \n"
+           "                                                            \n"
+           "                                                            \n",
+           FBLCK, BCYAN);
     do
     {
-        printf("%s%s"
-               "                                                            \n"
-               "                                                            \n"
-               "                  BIENVENIDO A SPECTRABANK                  \n"
-               "                                                            \n"
-               "                                                            \n", FBLCK, BCYAN);
         printf("%s%s"
                "1.- Inicio de sesion como profesional\n"
                "2.- Inicio de sesion como cliente(No disponible)\n"
                "q.- Cerrar\n\n"
-               "Inserte selecci%cn: ", FCYAN, BBLCK, 162);
-
+               "Inserte selecci%cn: ",
+               FCYAN, BBLCK, 162);
 
         fgets(input, 2, stdin);
         sscanf(input, "%c");
@@ -42,6 +44,9 @@ int main(void)
             system("cls"); //Limpia el terminal
             loginProfesional();
             break;
+        case 'q':
+            printf("%s\nSaliendo.\n\n", FRED);
+            break;
         default:
             printf("%s\nIntroduce una opcion valida, por favor.\n\n", FRED);
             break;
@@ -50,6 +55,8 @@ int main(void)
 
     printf(RESET); //Resetea los atributos de fuente cuando salimos del programa
     sqlite3_close(db);
+    free(input);
+    input = NULL;
 
     return 0;
 }

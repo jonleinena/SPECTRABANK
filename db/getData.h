@@ -7,6 +7,6 @@
 int startConn();
 
 int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
-Profesional getInfoProfesional(char *email, sqlite3 *db);
+Profesional *getInfoProfesional(char *email, sqlite3 *db);
 
 #endif
