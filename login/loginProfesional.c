@@ -18,7 +18,6 @@ void loginProfesional(void)
     contrasenya = malloc(18 * sizeof(char));
     Profesional *prof;
     prof = (Profesional *)malloc(sizeof(Profesional));
-    prof->user = (Usuario *)malloc(sizeof(Usuario));
     printf("**********************Bienvenido**********************\n");
     printf("INICIAR SESION\n");
     do

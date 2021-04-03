@@ -6,9 +6,17 @@
 #include "../lib/sqlite3/sqlite3.h"
 #include "../db/dbConnection.h"
 #include "../utils/colors.h"
+#include "../structures/structures.h"
+
+void imprimirListaClientes(Cliente **lista, int numElems);
 
 void menuProfesional(Profesional *prof)
 {
+
+    Cliente **lista;
+    lista = (Cliente **)malloc(50 * sizeof(Cliente *));
+
+    system("cls"); //limpiar terminal
 
     printf("**********************Bienvenido, %s**********************\n",
            prof->user->nombreApellidos);
@@ -33,7 +41,9 @@ void menuProfesional(Profesional *prof)
         switch (*input)
         {
         case '1':
-            printf("HelloWorld");
+
+            lista = getListaClientes((prof->idProfesional), db);
+            imprimirListaClientes(lista, 3);
             break;
         case '2':
             break;
@@ -49,4 +59,16 @@ void menuProfesional(Profesional *prof)
     } while (*input != 'q');
     free(input);
     input = NULL;
+}
+
+void imprimirListaClientes(Cliente **lista, int numElems)
+{
+    printf("DNI \t NOMBRE \t DOMICILIO \n");
+
+    for (int i = 0; i < numElems; i++)
+    {
+        printf("%s \t", ((*(lista + i))->user->dni));
+        printf("%s \t", ((*(lista + i))->user->nombreApellidos));
+        printf("%s \n", ((*(lista + i))->domicilio));
+    }
 }

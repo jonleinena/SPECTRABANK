@@ -13,7 +13,7 @@ typedef struct
 
 typedef struct
 {
-    Usuario user;
+    Usuario *user;
     char domicilio[30];
 } Cliente;
 typedef struct
