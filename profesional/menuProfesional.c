@@ -8,13 +8,15 @@
 #include "../utils/colors.h"
 #include "../structures/structures.h"
 
-void imprimirListaClientes(Cliente **lista, int numElems);
+void imprimirListaClientes(Cliente **lista, int *numElems);
+void opcionesCltes(Cliente **lista);
 
 void menuProfesional(Profesional *prof)
 {
 
     Cliente **lista;
     lista = (Cliente **)malloc(50 * sizeof(Cliente *));
+    int numFilas = 1;
 
     system("cls"); //limpiar terminal
 
@@ -31,7 +33,7 @@ void menuProfesional(Profesional *prof)
                "2.- Solicitudes de prestamo\n"
                "3.- Ver datos de mi cuenta\n"
                "q.- Cerrar\n\n"
-               "Inserte selecciocn: ",
+               "Inserte seleccion: ",
                FCYAN, BBLCK);
 
         fgets(input, 2, stdin);
@@ -41,9 +43,11 @@ void menuProfesional(Profesional *prof)
         switch (*input)
         {
         case '1':
+            lista = getListaClientes((prof->idProfesional), &numFilas, db);
+            imprimirListaClientes(lista, &numFilas);
 
-            lista = getListaClientes((prof->idProfesional), db);
-            imprimirListaClientes(lista, 3);
+            opcionesCltes(lista);
+            printf("\n");
             break;
         case '2':
             break;
@@ -51,6 +55,12 @@ void menuProfesional(Profesional *prof)
             break;
         case 'q':
             printf("%s\nSaliendo.\n\n", FRED);
+            for (int i = 0; i < *(&numFilas); i++)
+            {
+                free((*(lista + i))->user);
+                free(*(lista + i));
+            }
+            free(lista);
             break;
         default:
             printf("%s\nIntroduce una opcion valida, por favor.\n\n", FRED);
@@ -61,14 +71,53 @@ void menuProfesional(Profesional *prof)
     input = NULL;
 }
 
-void imprimirListaClientes(Cliente **lista, int numElems)
+void imprimirListaClientes(Cliente **lista, int *numElems)
 {
-    printf("DNI \t NOMBRE \t DOMICILIO \n");
+    printf("NUMERO \tDNI \t NOMBRE \t DOMICILIO \n");
 
-    for (int i = 0; i < numElems; i++)
+    for (int i = 0; i < *numElems; i++)
     {
-        printf("%s \t", ((*(lista + i))->user->dni));
-        printf("%s \t", ((*(lista + i))->user->nombreApellidos));
-        printf("%s \n", ((*(lista + i))->domicilio));
+        printf("%i\t %s \t %s \t %s\n", i, ((*(lista + i))->user->dni), ((*(lista + i))->user->nombreApellidos), ((*(lista + i))->domicilio));
     }
+}
+
+void opcionesCltes(Cliente **lista)
+{
+    char *selec, *clte;
+    int index = 0;
+    selec = malloc(sizeof(char));
+    clte = malloc(sizeof(char));
+    do
+    {
+        printf("\n1.- Visualizar datos de cliente\n2.- Visualizar cuentas de cliente\nq.- Atras\n");
+        fgets(selec, 2, stdin);
+        sscanf(selec, "%c");
+        fflush(stdin);
+        switch (*selec)
+        {
+        case '1':
+            printf("INTRODUZCA EL INDICE DEL CLIENTE (COLUMNA NUMERO)\n");
+            fgets(clte, 2, stdin);
+            sscanf(clte, "%i", &index);
+            fflush(stdin);
+            printf("DNI \t NOMBRE Y APELLIDOS \t FECHA DE NACIMIENTO \t TELEFONO \t CORREO ELECTRONICO \t DOMICILIO \n");
+            printf("%s\n", ((*(lista + index))->user->dni));
+            printf("%i\n", index);
+            printf("%s \t %s \t %s \t", ((*(lista + index))->user->dni), ((*(lista + index))->user->nombreApellidos), ((*(lista + index))->user->fechaNacimiento));
+            printf(" %i \t %s \t %s \n", ((*(lista + index))->user->telefono), ((*(lista + index))->user->email), ((*(lista + index))->domicilio));
+            break;
+        case '2':
+            //TODO
+            break;
+        case 'q':
+            printf("%s\nSaliendo.\n\n", FRED);
+            fflush(stdout);
+        default:
+            printf("%s\nIntroduce una opcion valida, por favor.\n\n", FRED);
+            fflush(stdout);
+            break;
+        }
+    } while (*selec != 'q');
+    free(selec);
+    selec = NULL;
 }

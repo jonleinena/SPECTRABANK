@@ -8,6 +8,6 @@ int startConn();
 
 int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
 Profesional *getInfoProfesional(char *email, sqlite3 *db);
-Cliente **getListaClientes(char *idProf, sqlite3 *db);
+Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
 
 #endif
