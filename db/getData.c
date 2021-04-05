@@ -10,6 +10,7 @@ int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
 
 Profesional *getInfoProfesional(char *email, sqlite3 *db);
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
+Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
 
 int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db)
 {
@@ -120,9 +121,7 @@ Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db)
         (*(lista + i))->user = (Usuario *)malloc(sizeof(Usuario));
     }
 
-    printf("NUMFILAS: %i\n", *numFilas);
-
-    int i = 0;
+       int i = 0;
 
     while (step == SQLITE_ROW && i <= *numFilas)
     {
@@ -144,5 +143,48 @@ Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db)
 
     return lista;
 
-    //EL FREE DE LA MEMORIA SE HACE DESDE EL MENU, CUANDO EL USUARIO DECIDE SALIR
+    free(lista); //El resto de punteros se liberan desde el menu, accediendo a ellos a traves del puntero que se crea ahi
+}
+Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db)
+{
+
+    int rc, rc1;
+    char *err_msg = 0;
+    sqlite3_stmt *res, *res1;
+
+    char *sql = "SELECT * FROM CUENTA_BANCARIA WHERE DNI_CLI = ?";
+    char *sql1 = "SELECT COUNT(*) FROM CUENTA_BANCARIA WHERE DNI_CLI = ?";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
+
+    if (rc == SQLITE_OK && rc1 == SQLITE_OK)
+    {
+        sqlite3_bind_text(res, 1, dniCliente, (strlen(dniCliente)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, dniCliente, (strlen(dniCliente)), SQLITE_STATIC);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+    int step1 = sqlite3_step(res1);
+    *numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
+
+    Cuenta *listaCuentas;
+    listaCuentas = malloc((*numFilas) * sizeof(Cuenta));
+    int i = 0;
+    while (step == SQLITE_ROW && i < *numFilas)
+    {
+        strcpy((listaCuentas + i)->iban, sqlite3_column_text(res, 0));
+        (listaCuentas + i)->saldo = sqlite3_column_double(res, 1);
+        strcpy((listaCuentas + i)->fechaCreacion, sqlite3_column_text(res, 2));
+        strcpy((listaCuentas + i)->dniPropietario, sqlite3_column_text(res, 3));
+        step = sqlite3_step(res);
+        i++;
+    }
+
+    return listaCuentas;
+    free(listaCuentas);
 }

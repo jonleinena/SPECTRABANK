@@ -84,12 +84,12 @@ void imprimirListaClientes(Cliente **lista, int *numElems)
 void opcionesCltes(Cliente **lista)
 {
     char *selec, *clte;
-    int index = 0;
+    int index, numFilas = 0;
     selec = malloc(sizeof(char));
     clte = malloc(sizeof(char));
     do
     {
-        printf("\n1.- Visualizar datos de cliente\n2.- Visualizar cuentas de cliente\nq.- Atras\n");
+        printf("\n1.- Visualizar datos de cliente\nq.- Atras\n");
         fgets(selec, 2, stdin);
         sscanf(selec, "%c");
         fflush(stdin);
@@ -101,20 +101,26 @@ void opcionesCltes(Cliente **lista)
             sscanf(clte, "%i", &index);
             fflush(stdin);
             printf("DNI \t NOMBRE Y APELLIDOS \t FECHA DE NACIMIENTO \t TELEFONO \t CORREO ELECTRONICO \t DOMICILIO \n");
-            printf("%s\n", ((*(lista + index))->user->dni));
-            printf("%i\n", index);
-            printf("%s \t %s \t %s \t", ((*(lista + index))->user->dni), ((*(lista + index))->user->nombreApellidos), ((*(lista + index))->user->fechaNacimiento));
-            printf(" %i \t %s \t %s \n", ((*(lista + index))->user->telefono), ((*(lista + index))->user->email), ((*(lista + index))->domicilio));
+            printf("%s \t %s \t\t\t %s \t\t", ((*(lista + index))->user->dni), ((*(lista + index))->user->nombreApellidos), ((*(lista + index))->user->fechaNacimiento));
+            printf(" %i \t\t %s \t\t %s \n", ((*(lista + index))->user->telefono), ((*(lista + index))->user->email), ((*(lista + index))->domicilio));
+
+            Cuenta *listaCuentas;
+            listaCuentas = malloc(30 * sizeof(Cuenta));
+            listaCuentas = getCuentasCliente(((*(lista + index))->user->dni), &numFilas, db);
+            printf("\n************ CUENTAS DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
+            printf("IBAN \t \t \t SALDO \t\t FECHA DE CREACION \t\t TITULAR \n");
+            for (int i = 0; i < numFilas; i++)
+            {
+                printf("%s \t %f \t %s \t\t %s \n", (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
+            }
+
             break;
-        case '2':
-            //TODO
-            break;
+
         case 'q':
             printf("%s\nSaliendo.\n\n", FRED);
-            fflush(stdout);
+            break;
         default:
             printf("%s\nIntroduce una opcion valida, por favor.\n\n", FRED);
-            fflush(stdout);
             break;
         }
     } while (*selec != 'q');

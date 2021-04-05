@@ -22,4 +22,12 @@ typedef struct
     Usuario *user;
 } Profesional;
 
+typedef struct
+{
+    char iban[21];
+    float saldo;
+    char fechaCreacion[11];
+    char dniPropietario[10];
+} Cuenta;
+
 #endif
