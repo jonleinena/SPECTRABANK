@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../login/loginProfesional.h"
+#include "../login/loginCliente.h"
 #include "../db/getData.h"
 #include "../db/postData.h"
 #include "../db/dbConnection.h"
@@ -29,7 +30,7 @@ int main(void)
     {
         printf("%s%s"
                "1.- Inicio de sesion como profesional\n"
-               "2.- Inicio de sesion como cliente(No disponible)\n"
+               "2.- Inicio de sesion como cliente\n"
                "q.- Cerrar\n\n"
                "Inserte selecci%cn: ",
                FCYAN, BBLCK, 162);
@@ -43,6 +44,10 @@ int main(void)
         case '1':
             system("cls"); //Limpia el terminal
             loginProfesional();
+            break;
+        case '2':
+            system("cls");
+            loginCliente();
             break;
         case 'q':
             printf("%s\nSaliendo.\n\n", FRED);

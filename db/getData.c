@@ -6,13 +6,14 @@
 #include "../structures/structures.h"
 #include "getData.h"
 
-int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db);
+int getLogin(char *email, char *contrasenya, sqlite3 *db);
 
 Profesional *getInfoProfesional(char *email, sqlite3 *db);
+Cliente *getInfoCliente(char *email, sqlite3 *db);
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
 Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
 
-int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db)
+int getLogin(char *email, char *contrasenya, sqlite3 *db)
 {
     int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
     int rc;
@@ -20,13 +21,14 @@ int getLoginProfesional(char *email, char *contrasenya, sqlite3 *db)
     sqlite3_stmt *res;
 
     //TODO - OPTIMIZAR ESTO
-    char *sql = "SELECT CONTRASENYA FROM PROFESIONAL WHERE CORREO = ?";
+    char *sql = "SELECT P.CONTRASENYA, C.CONTRASENYA FROM PROFESIONAL P, CLIENTE C WHERE P.CORREO = ? OR C.CORREO = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+        sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC);
+        sqlite3_bind_text(res, 2, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {
@@ -84,6 +86,47 @@ Profesional *getInfoProfesional(char *email, sqlite3 *db)
     sqlite3_finalize(res);
 
     return prof;
+}
+
+Cliente *getInfoCliente(char *email, sqlite3 *db){
+
+    int rc;
+    char *err_msg = 0;
+    sqlite3_stmt *res;
+    Cliente *cli;
+    cli = (Cliente *)malloc(sizeof(Cliente));
+    cli->user = (Usuario *)malloc(sizeof(Usuario));
+
+    char *sql = "SELECT * FROM CLIENTE WHERE CORREO = ?";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+    if (rc == SQLITE_OK)
+    {
+        sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+
+    if (step == SQLITE_ROW)
+    {
+
+        strcpy(cli->user->dni, sqlite3_column_text(res, 0));
+        strcpy(cli->user->contrasenya, sqlite3_column_text(res, 1));
+        strcpy(cli->user->nombreApellidos, sqlite3_column_text(res, 2));
+        cli->user->telefono = sqlite3_column_int(res, 3);
+        strcpy(cli->user->email, sqlite3_column_text(res, 4));
+        strcpy(cli->domicilio, sqlite3_column_text(res, 5));
+        strcpy(cli->user->fechaNacimiento, sqlite3_column_text(res, 6));
+    }
+
+    sqlite3_finalize(res);
+
+    return cli;
 }
 
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db)

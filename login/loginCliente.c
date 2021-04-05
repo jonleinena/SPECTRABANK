@@ -7,17 +7,17 @@
 #include "../lib/sqlite3/sqlite3.h"
 #include "../db/dbConnection.h"
 #include "../utils/colors.h"
-#include "../profesional/menuProfesional.h"
+#include "../cliente/menuCliente.h"
 
-void loginProfesional(void)
+void loginCliente(void)
 {
     int resultLogin = 0;
     char *email;
     email = malloc(30 * sizeof(char));
     char *contrasenya;
     contrasenya = malloc(18 * sizeof(char));
-    Profesional *prof;
-    prof = (Profesional *)malloc(sizeof(Profesional));
+    Cliente *cli;
+    cli = (Cliente *)malloc(sizeof(Cliente));
     printf("**********************Bienvenido**********************\n");
     printf("INICIAR SESION\n");
     do
@@ -43,9 +43,10 @@ void loginProfesional(void)
         if (resultLogin == 0)
         {
             printf("%sINICIO DE SESION CORRECTO\n", FGREN);
-            system("cls");
-            prof = getInfoProfesional(email, db);
-            menuProfesional(prof);
+            //system("cls");
+            cli = getInfoCliente(email, db);
+            printf("%s", cli->user->nombreApellidos);
+            menuCliente(cli);
         }
         else
             printf("%sError en el inicio de sesion\n", FRED);
@@ -55,8 +56,8 @@ void loginProfesional(void)
     email = NULL;
     free(contrasenya);
     contrasenya = NULL;
-    free(prof->user);
-    prof->user = NULL;
-    free(prof);
-    prof = NULL;
+    free(cli->user);
+    cli->user = NULL;
+    free(cli);
+    cli = NULL;
 }
