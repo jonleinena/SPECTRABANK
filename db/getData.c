@@ -91,7 +91,6 @@ Profesional *getInfoProfesional(char *email, sqlite3 *db)
 
 Cliente *getInfoCliente(char *email, sqlite3 *db)
 {
-
     int rc;
     char *err_msg = 0;
     sqlite3_stmt *res;
@@ -263,15 +262,15 @@ Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db)
 
     Inversion *listaInversiones;
     listaInversiones = (Inversion *)malloc(*numFilas * sizeof(Inversion));
-    for (int i = 0; i < numFilas; i++)
-    {
-        (listaInversiones + i)->cli = cli;
-    }
 
     int i = 0;
     while (step == SQLITE_ROW && i < *numFilas)
     {
-
+        (listaInversiones + i)->cli = cli;
+        strcpy((listaInversiones + i)->idCompania, sqlite3_column_text(res, 1));
+        (listaInversiones + i)->valorCompra = sqlite3_column_double(res, 2);
+        (listaInversiones + i)->cantidad = sqlite3_column_double(res, 3);
+        strcpy((listaInversiones + i)->fechaCompra, sqlite3_column_text(res, 4));
         i++;
         step = sqlite3_step(res);
     }

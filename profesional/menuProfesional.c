@@ -74,18 +74,17 @@ void menuProfesional(Profesional *prof)
 
 void imprimirListaClientes(Cliente **lista, int *numElems)
 {
-    printf("NUMERO \tDNI \t NOMBRE \t DOMICILIO \n");
-
+    printf("%-10s%-10s%-25s%-25s%-15s%-25s%-15s\n", "NUMERO", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
     for (int i = 0; i < *numElems; i++)
     {
-        printf("%i\t %s \t %s \t %s\n", i, ((*(lista + i))->user->dni), ((*(lista + i))->user->nombreApellidos), ((*(lista + i))->domicilio));
+        printf("%-10i%-10s%-25s%-25s%-15i%-25s%-15s\n", i, ((*(lista + i))->user->dni), ((*(lista + i))->user->nombreApellidos), ((*(lista + i))->user->fechaNacimiento), ((*(lista + i))->user->telefono), ((*(lista + i))->user->email), ((*(lista + i))->domicilio));
     }
 }
 
 void opcionesCltes(Cliente **lista)
 {
     char *selec, *clte;
-    int index, numFilas = 0;
+    int index, numFilas, numFilas2 = 0;
     selec = malloc(sizeof(char));
     clte = malloc(sizeof(char));
     do
@@ -101,22 +100,32 @@ void opcionesCltes(Cliente **lista)
             fgets(clte, 2, stdin);
             sscanf(clte, "%i", &index);
             fflush(stdin);
-            printf("DNI \t NOMBRE Y APELLIDOS \t FECHA DE NACIMIENTO \t TELEFONO \t CORREO ELECTRONICO \t DOMICILIO \n");
-            printf("%s \t %s \t\t\t %s \t\t", ((*(lista + index))->user->dni), ((*(lista + index))->user->nombreApellidos), ((*(lista + index))->user->fechaNacimiento));
-            printf(" %i \t\t %s \t\t %s \n", ((*(lista + index))->user->telefono), ((*(lista + index))->user->email), ((*(lista + index))->domicilio));
+            printf("%-10s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
+            printf("%-10s%-25s%-25s%-15i%-25s%-15s\n", ((*(lista + index))->user->dni), ((*(lista + index))->user->nombreApellidos), ((*(lista + index))->user->fechaNacimiento), ((*(lista + index))->user->telefono), ((*(lista + index))->user->email), ((*(lista + index))->domicilio));
 
             Cuenta *listaCuentas;
             listaCuentas = malloc(30 * sizeof(Cuenta));
             listaCuentas = getCuentasCliente(((*(lista + index))->user->dni), &numFilas, db);
-            realloc(listaCuentas, numFilas);
+            realloc(listaCuentas, numFilas); // resize the memory block pointed to by listaCuentas
             printf("\n************ CUENTAS DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
-            printf("IBAN \t \t \t SALDO \t\t FECHA DE CREACION \t\t TITULAR \n");
+            printf("%-25s%-15s%-25s%-10s\n", "IBAN", "SALDO", "FECHA CREACION", "DNI");
             for (int i = 0; i < numFilas; i++)
             {
-                printf("%s \t %f \t %s \t\t %s \n", (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
+                printf("%-25s%-15.2f%-25s%-10s\n", (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
             }
 
+
+            Inversion *listaInversiones;
+            listaInversiones = malloc(30 * sizeof(Inversion));
+            listaInversiones = getInversionClite(*(lista + index), &numFilas2, db);
+            realloc(listaInversiones, numFilas2);
             printf("\n************ INVERSIONES DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
+            printf("%-10s%-10s%-20s%-25s%-10s\n", "COMPANIA", "CANTIDAD", "VALOR DE COMPRA", "FECHA DE COMPRA", "POSICION TOTAL");
+            for (int i = 0; i < numFilas2; i++)
+            {
+                printf("%-10s%-10d%-20.2f%-25s%-10.2f\n", (listaInversiones + i)->idCompania, (listaInversiones + i)->cantidad, (listaInversiones + i)->valorCompra, (listaInversiones + i)->fechaCompra,(listaInversiones + i)->cantidad * (listaInversiones + i)->valorCompra);
+            }
+            
 
             break;
 

@@ -13,6 +13,7 @@
 
 //Colores de fuente (Foreground)
 #define FBLCK "\x1B[38;2;0;0;0m"
+#define FWHITE "\x1B[38;2;255;255;255m"
 #define FRED "\x1B[38;2;255;0;0m"
 #define FGREN "\x1B[38;2;0;255;0m"
 #define FBLUE "\x1B[38;2;0;0;255m"
