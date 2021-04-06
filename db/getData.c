@@ -12,6 +12,7 @@ Profesional *getInfoProfesional(char *email, sqlite3 *db);
 Cliente *getInfoCliente(char *email, sqlite3 *db);
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
 Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
+Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db);
 
 int getLogin(char *email, char *contrasenya, sqlite3 *db)
 {
@@ -88,7 +89,8 @@ Profesional *getInfoProfesional(char *email, sqlite3 *db)
     return prof;
 }
 
-Cliente *getInfoCliente(char *email, sqlite3 *db){
+Cliente *getInfoCliente(char *email, sqlite3 *db)
+{
 
     int rc;
     char *err_msg = 0;
@@ -164,7 +166,7 @@ Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db)
         (*(lista + i))->user = (Usuario *)malloc(sizeof(Usuario));
     }
 
-       int i = 0;
+    int i = 0;
 
     while (step == SQLITE_ROW && i <= *numFilas)
     {
@@ -216,7 +218,7 @@ Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db)
     *numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
 
     Cuenta *listaCuentas;
-    listaCuentas = malloc((*numFilas) * sizeof(Cuenta));
+    listaCuentas = (Cuenta *)malloc((*numFilas) * sizeof(Cuenta));
     int i = 0;
     while (step == SQLITE_ROW && i < *numFilas)
     {
@@ -230,4 +232,50 @@ Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db)
 
     return listaCuentas;
     free(listaCuentas);
+}
+
+Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db)
+{
+
+    int rc, rc1;
+    char *err_msg = 0;
+    sqlite3_stmt *res, *res1;
+
+    char *sql = "SELECT * FROM ACC_CLI WHERE DNI = ?";
+    char *sql1 = "SELECT COUNT(*) FROM ACC_CLI WHERE DNI = ?";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
+
+    if (rc == SQLITE_OK && rc1 == SQLITE_OK)
+    {
+        sqlite3_bind_text(res, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+    int step1 = sqlite3_step(res1);
+    *numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
+
+    Inversion *listaInversiones;
+    listaInversiones = (Inversion *)malloc(*numFilas * sizeof(Inversion));
+    for (int i = 0; i < numFilas; i++)
+    {
+        (listaInversiones + i)->cli = cli;
+    }
+
+    int i = 0;
+    while (step == SQLITE_ROW && i < *numFilas)
+    {
+
+        i++;
+        step = sqlite3_step(res);
+    }
+
+    return listaInversiones;
+    free(listaInversiones);
 }

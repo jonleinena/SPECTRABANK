@@ -11,5 +11,5 @@ Profesional *getInfoProfesional(char *email, sqlite3 *db);
 Cliente *getInfoCliente(char *email, sqlite3 *db);
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
 Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
-
+Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db);
 #endif

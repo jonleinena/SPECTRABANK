@@ -30,4 +30,11 @@ typedef struct
     char dniPropietario[10];
 } Cuenta;
 
+typedef struct
+{
+    Cliente *cli;
+    char codigo[5];
+    float valor;
+} Inversion;
+
 #endif

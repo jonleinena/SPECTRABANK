@@ -44,6 +44,7 @@ void menuProfesional(Profesional *prof)
         {
         case '1':
             lista = getListaClientes((prof->idProfesional), &numFilas, db);
+            realloc(lista, numFilas);
             imprimirListaClientes(lista, &numFilas);
 
             opcionesCltes(lista);
@@ -107,12 +108,15 @@ void opcionesCltes(Cliente **lista)
             Cuenta *listaCuentas;
             listaCuentas = malloc(30 * sizeof(Cuenta));
             listaCuentas = getCuentasCliente(((*(lista + index))->user->dni), &numFilas, db);
+            realloc(listaCuentas, numFilas);
             printf("\n************ CUENTAS DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
             printf("IBAN \t \t \t SALDO \t\t FECHA DE CREACION \t\t TITULAR \n");
             for (int i = 0; i < numFilas; i++)
             {
                 printf("%s \t %f \t %s \t\t %s \n", (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
             }
+
+            printf("\n************ INVERSIONES DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
 
             break;
 
