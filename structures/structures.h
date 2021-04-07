@@ -26,8 +26,8 @@ typedef struct
 {
     char iban[24];
     float saldo;
-    char fechaCreacion[11];
-    char dniPropietario[10];
+    char fechaCreacion[20];
+    char dniPropietario[9];
 } Cuenta;
 
 typedef struct
@@ -36,7 +36,7 @@ typedef struct
     char idCompania[5];
     float valorCompra;
     int cantidad;
-    char fechaCompra[11];
+    char fechaCompra[20];
 } Inversion;
 
 typedef struct
@@ -45,9 +45,9 @@ typedef struct
     int idPres;
     float importe;
     char idProfesional[7];
-    char fechaEmision[11];
-    char fechaDevol[11];
-    char fechaComp[11];
+    char fechaEmision[20];
+    char fechaDevol[20];
+    char fechaComp[20];
     float tae;
 
 } Prestamo;
@@ -58,7 +58,7 @@ typedef struct
     char ibanOrigen[24];
     char ibanDestino[24];
     float importe;
-    char fecha[11];
+    char fecha[20];
     char concepto[30];
 
 } Movimiento;

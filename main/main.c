@@ -15,7 +15,7 @@ int main(void)
         return 0;
     }
 
-    system("cls"); //Esta limpieza se ejecuta para el buen funcionamiento de la apariencia de la consola
+    printf("\e[1;1H\e[2J"); //Esta limpieza se ejecuta para el buen funcionamiento de la apariencia de la consola
     char *input;
     input = malloc(sizeof(char));
 
@@ -67,7 +67,7 @@ int main(void)
            "\t\t     -.-NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM/..      \n"
            "\t\t     ...::::::::::::::::::::::::::::::::::::::::-:::::::::::::::::::::::::::::::::::::::..-      \n"
            "\t\t      `````````````````````````````````````````````````````````````````````````````````````      \n\n\n",
-           FWHITE, BBLCK);
+           FWHITE, RESET);
     printf(
         "\t   /$$$$$$                                  /$$                         /$$$$$$$                      /$$       \n"
         "\t  /$$__  $$                                | $$                        | $$__  $$                    | $$       \n"
@@ -82,12 +82,11 @@ int main(void)
         "\t           |__/                                                                                                 \n\n\n\n");
     do
     {
-        printf("%s%s"
+        printf(FCYAN
                "1.- Inicio de sesion como profesional\n"
                "2.- Inicio de sesion como cliente\n"
                "q.- Cerrar\n\n"
-               "Inserte selecci%cn: ",
-               FCYAN, BBLCK, 162);
+               "Inserte selecci%cn: ", 162);
 
         fgets(input, 2, stdin);
         sscanf(input, "%c", input);
@@ -96,11 +95,11 @@ int main(void)
         switch (*input)
         {
         case '1':
-            system("cls"); //Limpia el terminal
+            printf("\e[1;1H\e[2J"); //Limpia el terminal
             loginProfesional();
             break;
         case '2':
-            system("cls");
+            printf("\e[1;1H\e[2J");
             loginCliente();
             break;
         case 'q':

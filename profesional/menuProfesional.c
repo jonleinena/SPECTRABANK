@@ -10,7 +10,7 @@
 
 void imprimirListaClientes(Cliente **lista, int *numElems);
 void opcionesCltes(Cliente **lista);
-void verMovimientos(Cuenta *cue, int *numFilas, int *indice);
+void verMovimientos(Cuenta *cue, int *numFilas);
 
 void menuProfesional(Profesional *prof)
 {
@@ -19,7 +19,7 @@ void menuProfesional(Profesional *prof)
     lista = (Cliente **)malloc(50 * sizeof(Cliente *));
     int numFilas = 1;
 
-    system("cls"); //limpiar terminal
+    printf("\e[1;1H\e[2J"); //limpiar terminal
 
     printf("**********************Bienvenido, %s**********************\n",
            prof->user->nombreApellidos);
@@ -29,13 +29,12 @@ void menuProfesional(Profesional *prof)
     do
     {
 
-        printf("%s%s"
+        printf(FCYAN
                "1.- Ver listado de clientes\n"
                "2.- Solicitudes de prestamo\n"
                "3.- Ver datos de mi cuenta\n"
                "q.- Cerrar\n\n"
-               "Inserte seleccion: ",
-               FCYAN, BBLCK);
+               "Inserte seleccion: ");
 
         fgets(input, 2, stdin);
         sscanf(input, "%c", input);
@@ -75,7 +74,7 @@ void menuProfesional(Profesional *prof)
 
 void imprimirListaClientes(Cliente **lista, int *numElems)
 {
-    printf("%-10s%-10s%-25s%-25s%-15s%-25s%-15s\n", "NUMERO", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
+    printf("%-10s%-10s%-25s%-25s%-15s%-25s%-15s\n", "INDICE", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
     for (int i = 0; i < *numElems; i++)
     {
         printf("%-10i%-10s%-25s%-25s%-15i%-25s%-15s\n", i, ((*(lista + i))->user->dni), ((*(lista + i))->user->nombreApellidos), ((*(lista + i))->user->fechaNacimiento), ((*(lista + i))->user->telefono), ((*(lista + i))->user->email), ((*(lista + i))->domicilio));
@@ -85,9 +84,12 @@ void imprimirListaClientes(Cliente **lista, int *numElems)
 void opcionesCltes(Cliente **lista)
 {
     char *selec, *clte;
+    char *selec2, *cuenta;
     int index, numFilas = 0;
     selec = malloc(sizeof(char));
     clte = malloc(sizeof(char));
+    selec2 = malloc(sizeof(char));
+    cuenta = malloc(sizeof(char));
     do
     {
         printf("\n1.- Visualizar datos de cliente\nq.- Atras\n");
@@ -97,7 +99,7 @@ void opcionesCltes(Cliente **lista)
         switch (*selec)
         {
         case '1':
-            printf("INTRODUZCA EL INDICE DEL CLIENTE (COLUMNA NUMERO)\n");
+            printf("INTRODUZCA EL INDICE DEL CLIENTE\n");
             fgets(clte, 2, stdin);
             sscanf(clte, "%i", &index);
             fflush(stdin);
@@ -109,10 +111,10 @@ void opcionesCltes(Cliente **lista)
             listaCuentas = getCuentasCliente(((*(lista + index))->user->dni), &numFilas, db);
             realloc(listaCuentas, numFilas * sizeof(Cuenta)); // resize the memory block pointed to by listaCuentas
             printf("\n************ CUENTAS DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
-            printf("%-25s%-15s%-25s%-10s\n", "IBAN", "SALDO", "FECHA CREACION", "DNI");
+            printf("%-10s%-25s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
             for (int i = 0; i < numFilas; i++)
-            { //ANADIR UN %I DE i PARA SELECCIONAR CUENTA A VER MOVIMENTOS POR INDICE
-                printf("%-25s%-15.2f%-25s%-10s\n", (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
+            {
+                printf("%-10d%-25s%-15.2f%-25s%-10s\n", i, (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
             }
 
             Inversion *listaInversiones;
@@ -128,7 +130,36 @@ void opcionesCltes(Cliente **lista)
 
             Prestamo *listaPrestamos;
             listaPrestamos = (Prestamo *)malloc(15 * sizeof(Prestamo));
-            //falta hacer el realloc a la lista, acabar los sqlite3_column_text y la visualizacion de los datos
+            listaPrestamos = getPrestamos(*(lista + index), &numFilas, db);
+            realloc(listaPrestamos, numFilas * sizeof(Prestamo));
+            printf("\n************ PRESTAMOS DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
+            printf("%-10s%-10s%-25s%-25s%-25s%-5s\n", "ID", "IMPORTE", "FECHA EMISION", "FECHA DEVOLUCION", "FECHA COMPLETADO", "TAE");
+            for (int i = 0; i < numFilas; i++)
+            {
+                printf("%-10i%-10.2f%-25s%-25s%-25s%-5.2f%%\n", (listaPrestamos + i)->idPres, (listaPrestamos + i)->importe, (listaPrestamos + i)->fechaEmision, (listaPrestamos + i)->fechaDevol, strcmp((listaPrestamos + i)->fechaComp, "NULL") != 0 ? (listaPrestamos + i)->fechaComp : "Sin completar" , (listaPrestamos + i)->tae);
+            }
+            do {
+                printf("\n1.- Visualizar movimientos de una cuenta\nq.- Atras\n");
+                fgets(selec2, 2, stdin);
+                sscanf(selec2, "%c", selec2);
+                fflush(stdin);
+               switch (*selec2)
+               {
+               case '1':
+                    printf("INTRODUZCA EL INDICE DE LA CUENTA\n");
+                    fgets(cuenta, 2, stdin);
+                    sscanf(cuenta, "%i", &index);
+                    fflush(stdin);
+                    verMovimientos((listaCuentas + index), &numFilas);
+                    break;
+               case 'q':
+                    printf("%s\nSaliendo.\n\n", FRED);
+                    break;
+               default:
+                    printf("%s\nIntroduce una opcion valida, por favor.\n\n", FRED);
+                    break;
+               }
+            } while (*selec2 != 'q');
             break;
 
         case 'q':
@@ -146,11 +177,19 @@ void opcionesCltes(Cliente **lista)
 }
 
 //Hacer este metodo (el getData esta ya)
-void verMovimientos(Cuenta *cue, int *numFilas, int *indice)
+void verMovimientos(Cuenta *cue, int *numFilas)
 {
     Movimiento *movimientos;
     movimientos = (Movimiento *)malloc(40 * sizeof(Movimiento));
 
     movimientos = getMovimientos(cue, numFilas, db);
     realloc(movimientos, *numFilas * sizeof(Movimiento));
+
+    printf("\n************ MOVIMIENTOS CUENTA %s**************\n", cue->iban);
+    printf("%-10s%-25s%-25s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
+    for (int i = 0; i < *numFilas; i++)
+    {
+        printf("%-10i%-25s%-25s%-10.2f%-25s%-25s\n", (movimientos + i)->idTransaccion, (movimientos + i)->ibanOrigen, (movimientos + i)->ibanDestino, (movimientos + i)->importe, (movimientos + i)->fecha, (movimientos + i)->concepto);
+    }
+
 }

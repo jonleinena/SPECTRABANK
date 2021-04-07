@@ -319,10 +319,19 @@ Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db)
     {
         (listaPrestamos + i)->idPres = sqlite3_column_int(res, 0);
         (listaPrestamos + i)->cli = cli;
+        strcpy((listaPrestamos + i)->idProfesional, sqlite3_column_text(res, 2));
+        (listaPrestamos + i)->importe = sqlite3_column_double(res, 3);
+        strcpy((listaPrestamos + i)->fechaEmision, sqlite3_column_text(res, 4));
+        strcpy((listaPrestamos + i)->fechaDevol, sqlite3_column_text(res, 5));
+        strcpy((listaPrestamos + i)->fechaComp, sqlite3_column_text(res, 6));
+        (listaPrestamos + i)->tae = sqlite3_column_double(res, 7);
 
         i++;
         step = sqlite3_step(res);
     }
+
+    return listaPrestamos;
+    free(listaPrestamos);
 }
 
 Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db)
@@ -331,8 +340,8 @@ Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db)
     char *err_msg = 0;
     sqlite3_stmt *res, *res1;
 
-    char *sql = "SELECT * FROM MOVIMIENTO WHERE IBAN_ORIGEN = ?";
-    char *sql1 = "SELECT COUNT(*) FROM MOVIMIENTO WHERE IBAN_ORIGEN = ?";
+    char *sql = "SELECT * FROM MOVIMIENTO WHERE IBAN_ORIGEN = ? OR IBAN_DESTINO = ? ORDER BY ID_MOV DESC";
+    char *sql1 = "SELECT COUNT(*) FROM MOVIMIENTO WHERE IBAN_ORIGEN = ? OR IBAN_DESTINO = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
     rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
@@ -340,7 +349,9 @@ Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db)
     if (rc == SQLITE_OK && rc1 == SQLITE_OK)
     {
         sqlite3_bind_text(res, 1, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res, 2, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
         sqlite3_bind_text(res1, 1, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 2, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
     }
     else
     {
@@ -367,6 +378,6 @@ Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db)
         step = sqlite3_step(res);
     }
 
-    return (listaMovimientos);
+    return listaMovimientos;
     free(listaMovimientos);
 }
