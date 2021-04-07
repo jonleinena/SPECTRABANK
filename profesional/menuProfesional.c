@@ -10,6 +10,7 @@
 
 void imprimirListaClientes(Cliente **lista, int *numElems);
 void opcionesCltes(Cliente **lista);
+void verMovimientos(Cuenta *cue, int *numFilas, int *indice);
 
 void menuProfesional(Profesional *prof)
 {
@@ -37,14 +38,14 @@ void menuProfesional(Profesional *prof)
                FCYAN, BBLCK);
 
         fgets(input, 2, stdin);
-        sscanf(input, "%c");
+        sscanf(input, "%c", input);
         fflush(stdin);
 
         switch (*input)
         {
         case '1':
             lista = getListaClientes((prof->idProfesional), &numFilas, db);
-            realloc(lista, numFilas);
+            realloc(lista, numFilas * sizeof(Cliente *));
             imprimirListaClientes(lista, &numFilas);
 
             opcionesCltes(lista);
@@ -84,14 +85,14 @@ void imprimirListaClientes(Cliente **lista, int *numElems)
 void opcionesCltes(Cliente **lista)
 {
     char *selec, *clte;
-    int index, numFilas, numFilas2 = 0;
+    int index, numFilas = 0;
     selec = malloc(sizeof(char));
     clte = malloc(sizeof(char));
     do
     {
         printf("\n1.- Visualizar datos de cliente\nq.- Atras\n");
         fgets(selec, 2, stdin);
-        sscanf(selec, "%c");
+        sscanf(selec, "%c", selec);
         fflush(stdin);
         switch (*selec)
         {
@@ -106,27 +107,28 @@ void opcionesCltes(Cliente **lista)
             Cuenta *listaCuentas;
             listaCuentas = malloc(30 * sizeof(Cuenta));
             listaCuentas = getCuentasCliente(((*(lista + index))->user->dni), &numFilas, db);
-            realloc(listaCuentas, numFilas); // resize the memory block pointed to by listaCuentas
+            realloc(listaCuentas, numFilas * sizeof(Cuenta)); // resize the memory block pointed to by listaCuentas
             printf("\n************ CUENTAS DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
             printf("%-25s%-15s%-25s%-10s\n", "IBAN", "SALDO", "FECHA CREACION", "DNI");
             for (int i = 0; i < numFilas; i++)
-            {
+            { //ANADIR UN %I DE i PARA SELECCIONAR CUENTA A VER MOVIMENTOS POR INDICE
                 printf("%-25s%-15.2f%-25s%-10s\n", (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
             }
 
-
             Inversion *listaInversiones;
             listaInversiones = malloc(30 * sizeof(Inversion));
-            listaInversiones = getInversionClite(*(lista + index), &numFilas2, db);
-            realloc(listaInversiones, numFilas2);
+            listaInversiones = getInversionClite(*(lista + index), &numFilas, db);
+            realloc(listaInversiones, numFilas * sizeof(Inversion));
             printf("\n************ INVERSIONES DE %s**************\n", ((*(lista + index))->user->nombreApellidos));
             printf("%-10s%-10s%-20s%-25s%-10s\n", "COMPANIA", "CANTIDAD", "VALOR DE COMPRA", "FECHA DE COMPRA", "POSICION TOTAL");
-            for (int i = 0; i < numFilas2; i++)
+            for (int i = 0; i < numFilas; i++)
             {
-                printf("%-10s%-10d%-20.2f%-25s%-10.2f\n", (listaInversiones + i)->idCompania, (listaInversiones + i)->cantidad, (listaInversiones + i)->valorCompra, (listaInversiones + i)->fechaCompra,(listaInversiones + i)->cantidad * (listaInversiones + i)->valorCompra);
+                printf("%-10s%-10d%-20.2f%-25s%-10.2f\n", (listaInversiones + i)->idCompania, (listaInversiones + i)->cantidad, (listaInversiones + i)->valorCompra, (listaInversiones + i)->fechaCompra, (listaInversiones + i)->cantidad * (listaInversiones + i)->valorCompra);
             }
-            
 
+            Prestamo *listaPrestamos;
+            listaPrestamos = (Prestamo *)malloc(15 * sizeof(Prestamo));
+            //falta hacer el realloc a la lista, acabar los sqlite3_column_text y la visualizacion de los datos
             break;
 
         case 'q':
@@ -137,6 +139,18 @@ void opcionesCltes(Cliente **lista)
             break;
         }
     } while (*selec != 'q');
+    free(clte);
     free(selec);
+    clte = NULL;
     selec = NULL;
+}
+
+//Hacer este metodo (el getData esta ya)
+void verMovimientos(Cuenta *cue, int *numFilas, int *indice)
+{
+    Movimiento *movimientos;
+    movimientos = (Movimiento *)malloc(40 * sizeof(Movimiento));
+
+    movimientos = getMovimientos(cue, numFilas, db);
+    realloc(movimientos, *numFilas * sizeof(Movimiento));
 }

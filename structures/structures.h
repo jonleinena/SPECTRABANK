@@ -39,8 +39,10 @@ typedef struct
     char fechaCompra[11];
 } Inversion;
 
-typedef struct {
+typedef struct
+{
     Cliente *cli;
+    int idPres;
     float importe;
     char idProfesional[7];
     char fechaEmision[11];
@@ -48,6 +50,17 @@ typedef struct {
     char fechaComp[11];
     float tae;
 
-}Prestamo;
+} Prestamo;
+
+typedef struct
+{
+    int idTransaccion;
+    char ibanOrigen[24];
+    char ibanDestino[24];
+    float importe;
+    char fecha[11];
+    char concepto[30];
+
+} Movimiento;
 
 #endif

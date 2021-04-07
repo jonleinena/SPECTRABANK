@@ -6,13 +6,18 @@
 #include "../structures/structures.h"
 #include "getData.h"
 
-int getLogin(char *email, char *contrasenya, sqlite3 *db);
+//DEFINICION DE METODOS
 
+int getLogin(char *email, char *contrasenya, sqlite3 *db);
 Profesional *getInfoProfesional(char *email, sqlite3 *db);
 Cliente *getInfoCliente(char *email, sqlite3 *db);
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
 Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
 Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db);
+Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db);
+Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db);
+
+//FIN DE LA DEFINICION
 
 int getLogin(char *email, char *contrasenya, sqlite3 *db)
 {
@@ -277,4 +282,91 @@ Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db)
 
     return listaInversiones;
     free(listaInversiones);
+}
+
+Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db)
+{
+
+    int rc, rc1;
+    char *err_msg = 0;
+    sqlite3_stmt *res, *res1;
+
+    char *sql = "SELECT * FROM PRESTAMO WHERE DNI_CLI = ?";
+    char *sql1 = "SELECT COUNT(*) FROM PRESTAMO WHERE DNI_CLI = ?";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
+
+    if (rc == SQLITE_OK && rc1 == SQLITE_OK)
+    {
+        sqlite3_bind_text(res, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+    int step1 = sqlite3_step(res1);
+    *numFilas = sqlite3_column_int(res1, 0);
+
+    Prestamo *listaPrestamos;
+    listaPrestamos = (Prestamo *)malloc(*numFilas * sizeof(Prestamo));
+
+    int i = 0;
+    while (step == SQLITE_ROW)
+    {
+        (listaPrestamos + i)->idPres = sqlite3_column_int(res, 0);
+        (listaPrestamos + i)->cli = cli;
+
+        i++;
+        step = sqlite3_step(res);
+    }
+}
+
+Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db)
+{
+    int rc, rc1;
+    char *err_msg = 0;
+    sqlite3_stmt *res, *res1;
+
+    char *sql = "SELECT * FROM MOVIMIENTO WHERE IBAN_ORIGEN = ?";
+    char *sql1 = "SELECT COUNT(*) FROM MOVIMIENTO WHERE IBAN_ORIGEN = ?";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
+
+    if (rc == SQLITE_OK && rc1 == SQLITE_OK)
+    {
+        sqlite3_bind_text(res, 1, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+    int step1 = sqlite3_step(res1);
+    *numFilas = sqlite3_column_int(res1, 0);
+
+    Movimiento *listaMovimientos;
+    listaMovimientos = (Movimiento *)malloc(*numFilas * sizeof(Movimiento));
+
+    int i = 0;
+    while (step == SQLITE_ROW)
+    {
+        (listaMovimientos + i)->idTransaccion = sqlite3_column_int(res, 0);
+        strcpy((listaMovimientos + i)->ibanOrigen, sqlite3_column_text(res, 1));
+        strcpy((listaMovimientos + i)->ibanDestino, sqlite3_column_text(res, 2));
+        (listaMovimientos + i)->importe = sqlite3_column_double(res, 3);
+        strcpy((listaMovimientos + i)->fecha, sqlite3_column_text(res, 4));
+        strcpy((listaMovimientos + i)->concepto, sqlite3_column_text(res, 5));
+        i++;
+        step = sqlite3_step(res);
+    }
+
+    return (listaMovimientos);
+    free(listaMovimientos);
 }

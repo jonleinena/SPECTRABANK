@@ -12,4 +12,6 @@ Cliente *getInfoCliente(char *email, sqlite3 *db);
 Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
 Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
 Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db);
+Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db);
+Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db);
 #endif

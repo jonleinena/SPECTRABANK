@@ -24,12 +24,12 @@ void loginProfesional(void)
     {
         printf("Introduce el correo electronico: ");
         fgets(email, 30, stdin);
-        sscanf(email, "%c");
+        sscanf(email, "%c", email);
         fflush(stdin);
 
         printf("Introduce contrase%ca: ", 164);
         fgets(contrasenya, 18, stdin);
-        sscanf(contrasenya, "%c");
+        sscanf(contrasenya, "%c", contrasenya);
         fflush(stdin);
         *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
 
