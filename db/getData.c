@@ -1,25 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../lib/sqlite3/sqlite3.h"
-#include "dbConnection.h"
-#include "../structures/structures.h"
 #include "getData.h"
+#include "dbConnection.h"
+#include "../lib/sqlite3/sqlite3.h"
+#include "../utils/structures.h"
 
-//DEFINICION DE METODOS
-
-int getLogin(char *email, char *contrasenya, sqlite3 *db);
-Profesional *getInfoProfesional(char *email, sqlite3 *db);
-Cliente *getInfoCliente(char *email, sqlite3 *db);
-Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
-Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
-Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db);
-Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db);
-Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db);
-
-//FIN DE LA DEFINICION
-
-int getLogin(char *email, char *contrasenya, sqlite3 *db)
+int getLogin(char *email, char *contrasenya)
 {
     int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
     int rc;
@@ -53,7 +40,7 @@ int getLogin(char *email, char *contrasenya, sqlite3 *db)
     return comprobacionContrasenya;
 }
 
-Profesional *getInfoProfesional(char *email, sqlite3 *db)
+Profesional *getInfoProfesional(char *email)
 {
     int rc;
     char *err_msg = 0;
@@ -94,7 +81,7 @@ Profesional *getInfoProfesional(char *email, sqlite3 *db)
     return prof;
 }
 
-Cliente *getInfoCliente(char *email, sqlite3 *db)
+Cliente *getInfoCliente(char *email)
 {
     int rc;
     char *err_msg = 0;
@@ -135,7 +122,7 @@ Cliente *getInfoCliente(char *email, sqlite3 *db)
     return cli;
 }
 
-Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db)
+Cliente **getListaClientes(char *idProf, int *numFilas)
 {
     int rc, rc1;
     char *err_msg = 0;
@@ -194,7 +181,7 @@ Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db)
 
     free(lista); //El resto de punteros se liberan desde el menu, accediendo a ellos a traves del puntero que se crea ahi
 }
-Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db)
+Cuenta *getCuentasCliente(char *dniCliente, int *numFilas)
 {
 
     int rc, rc1;
@@ -238,7 +225,7 @@ Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db)
     free(listaCuentas);
 }
 
-Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db)
+Inversion *getInversionClite(Cliente *cli, int *numFilas)
 {
 
     int rc, rc1;
@@ -284,7 +271,7 @@ Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db)
     free(listaInversiones);
 }
 
-Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db)
+Prestamo *getPrestamos(Cliente *cli, int *numFilas)
 {
 
     int rc, rc1;
@@ -334,7 +321,7 @@ Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db)
     free(listaPrestamos);
 }
 
-Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db)
+Movimiento *getMovimientos(Cuenta *cue, int *numFilas)
 {
     int rc, rc1;
     char *err_msg = 0;

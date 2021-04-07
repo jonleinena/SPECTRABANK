@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../login/loginProfesional.h"
-#include "../login/loginCliente.h"
+#include "login/loginProfesional.h"
 #include "../db/getData.h"
 #include "../db/postData.h"
 #include "../db/dbConnection.h"
@@ -84,7 +83,7 @@ int main(void)
     {
         printf(FCYAN
                "1.- Inicio de sesion como profesional\n"
-               "2.- Inicio de sesion como cliente\n"
+               "2.- Inicio de sesion como cliente (no funciona)\n"
                "q.- Cerrar\n\n"
                "Inserte selecci%cn: ", 162);
 
@@ -99,8 +98,6 @@ int main(void)
             loginProfesional();
             break;
         case '2':
-            printf("\e[1;1H\e[2J");
-            loginCliente();
             break;
         case 'q':
             printf("%s\nSaliendo.\n\n", FRED);

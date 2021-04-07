@@ -1,4 +1,4 @@
-#include "../structures/structures.h"
+#include "../structures.h"
 
 #ifndef prestamo_h_
 #define prestamo_h_

@@ -1,17 +1,16 @@
-#include "../structures/structures.h"
+#include "../utils/structures.h"
 #include "../lib/sqlite3/sqlite3.h"
 #include "dbConnection.h"
 #ifndef getData
 #define getData
 
-int startConn();
+int getLogin(char *email, char *contrasenya);
+Profesional *getInfoProfesional(char *email);
+Cliente *getInfoCliente(char *email);
+Cliente **getListaClientes(char *idProf, int *numFilas);
+Cuenta *getCuentasCliente(char *dniCliente, int *numFilas);
+Inversion *getInversionClite(Cliente *cli, int *numFilas);
+Prestamo *getPrestamos(Cliente *cli, int *numFilas);
+Movimiento *getMovimientos(Cuenta *cue, int *numFilas);
 
-int getLogin(char *email, char *contrasenya, sqlite3 *db);
-Profesional *getInfoProfesional(char *email, sqlite3 *db);
-Cliente *getInfoCliente(char *email, sqlite3 *db);
-Cliente **getListaClientes(char *idProf, int *numFilas, sqlite3 *db);
-Cuenta *getCuentasCliente(char *dniCliente, int *numFilas, sqlite3 *db);
-Inversion *getInversionClite(Cliente *cli, int *numFilas, sqlite3 *db);
-Prestamo *getPrestamos(Cliente *cli, int *numFilas, sqlite3 *db);
-Movimiento *getMovimientos(Cuenta *cue, int *numFilas, sqlite3 *db);
 #endif

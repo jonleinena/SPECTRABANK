@@ -2,12 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include "loginProfesional.h"
-#include "../db/getData.h"
-#include "../db/postData.h"
-#include "../lib/sqlite3/sqlite3.h"
-#include "../db/dbConnection.h"
-#include "../utils/colors.h"
-#include "../profesional/menuProfesional.h"
+#include "../../db/getData.h"
+#include "../../db/postData.h"
+#include "../../lib/sqlite3/sqlite3.h"
+#include "../../utils/colors.h"
+#include "../menuProfesional/menuProfesional.h"
 
 void loginProfesional(void)
 {
@@ -35,7 +34,7 @@ void loginProfesional(void)
 
         if (startConn != SQLITE_OK)
         {
-            resultLogin = getLogin(email, contrasenya, db);
+            resultLogin = getLogin(email, contrasenya);
         }
         else
             break;
@@ -44,7 +43,7 @@ void loginProfesional(void)
         {
             printf("%sINICIO DE SESION CORRECTO\n", FGREN);
             system("cls");
-            prof = getInfoProfesional(email, db);
+            prof = getInfoProfesional(email);
             menuProfesional(prof);
         }
         else

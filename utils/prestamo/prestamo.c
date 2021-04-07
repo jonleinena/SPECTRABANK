@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../db/getData.h"
+#include "prestamo.h"
+#include "../../db/getData.h"
 #include "../db/postData.h"
 #include "../lib/sqlite3/sqlite3.h"
 #include "../db/dbConnection.h"
 #include "../utils/colors.h"
-#include "../structures/structures.h"
+#include "../structures.h"
 
 
 
@@ -24,7 +25,7 @@ float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversio
     if(patrimonioClte/pres->importe >= 1.00){
 
         if(patrimonioClte/pres->importe == 1){
-            tin = 
+            tin;
         
         }else if(patrimonioClte/pres->importe <= 1.5){
 

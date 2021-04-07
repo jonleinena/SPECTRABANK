@@ -1,1 +1,1 @@
-gcc main/main.c lib/sqlite3/sqlite3.c db/dbConnection.c db/getData.c db/postData.c login/loginProfesional.c login/loginCliente.c profesional/menuProfesional.c cliente/menuCliente.c -o 
+gcc main/main.c lib/sqlite3/sqlite3.c db/dbConnection.c db/getData.c db/postData.c main/login/loginProfesional.c main/menuProfesional/menuProfesional.c -o 
