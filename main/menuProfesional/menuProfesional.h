@@ -10,5 +10,7 @@ void mostrarCuentas(Cliente *cliente);
 void mostrarInversiones(Cliente *cliente);
 void mostrarPrestamos(Cliente *cliente);
 void verMovimientos(Cuenta *cue, int *numFilas);
+void verDatosProfesional(Profesional *prof);
+void modificarDatos(Profesional *prof);
 
 #endif

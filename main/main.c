@@ -18,7 +18,7 @@ int main(void)
     char *input;
     input = malloc(sizeof(char));
 
-    printf("%s%s"
+    printf(FWHITE RESET
            "\t\t                                               ``                                                \n"
            "\t\t                                           ``......``                                            \n"
            "\t\t                                       ``..../sdmy/-...``                                        \n"
@@ -65,8 +65,7 @@ int main(void)
            "\t\t     ...shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhs-hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhy-.-      \n"
            "\t\t     -.-NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM/..      \n"
            "\t\t     ...::::::::::::::::::::::::::::::::::::::::-:::::::::::::::::::::::::::::::::::::::..-      \n"
-           "\t\t      `````````````````````````````````````````````````````````````````````````````````````      \n\n\n",
-           FWHITE, RESET);
+           "\t\t      `````````````````````````````````````````````````````````````````````````````````````      \n\n\n");
     printf(
         "\t   /$$$$$$                                  /$$                         /$$$$$$$                      /$$       \n"
         "\t  /$$__  $$                                | $$                        | $$__  $$                    | $$       \n"
@@ -85,7 +84,8 @@ int main(void)
                "1.- Inicio de sesion como profesional\n"
                "2.- Inicio de sesion como cliente (no funciona)\n"
                "q.- Cerrar\n\n"
-               "Inserte selecci%cn: ", 162);
+               "Inserte selecci%cn: ",
+               162);
 
         fgets(input, 2, stdin);
         sscanf(input, "%c", input);
@@ -100,10 +100,10 @@ int main(void)
         case '2':
             break;
         case 'q':
-            printf("%s\nSaliendo.\n\n", FRED);
+            printf(FRED "\nSaliendo.\n\n");
             break;
         default:
-            printf("%s\nIntroduce una opcion valida, por favor.\n\n", FRED);
+            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
             break;
         }
     } while (*input != 'q');
