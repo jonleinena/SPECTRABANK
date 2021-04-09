@@ -81,24 +81,29 @@ void imprimirListaClientes(Cliente **lista, int *numElems)
         printf("%-10i%-10s%-25s%-25s%-15i%-25s%-15s\n", i, ((*(lista + i))->user->dni), ((*(lista + i))->user->nombreApellidos), ((*(lista + i))->user->fechaNacimiento), ((*(lista + i))->user->telefono), ((*(lista + i))->user->email), ((*(lista + i))->domicilio));
     }
 
-    printf("Introduce indice del cliente: ");
-    fgets(input, 2, stdin);
-    sscanf(input, "%i", index);
-    fflush(stdin);
+    if (*numElems > 0)
+    {
+        printf("Introduce indice del cliente o la letra q para salir: ");
+        fgets(input, 2, stdin);
+        sscanf(input, "%i", index);
+        fflush(stdin);
 
-    Cliente *clienteSel;
-    clienteSel = (Cliente *)malloc(sizeof(Cliente));
-    clienteSel = (*(lista + *index));
+        Cliente *clienteSel;
+        clienteSel = (Cliente *)malloc(sizeof(Cliente));
+        clienteSel = (*(lista + *index));
 
-    printf("\e[1;1H\e[2J");
-    printf("%-10s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
-    printf("%-10s%-25s%-25s%-15i%-25s%-15s\n", (clienteSel->user->dni), (clienteSel->user->nombreApellidos), (clienteSel->user->fechaNacimiento), (clienteSel->user->telefono), (clienteSel->user->email), (clienteSel->domicilio));
+        printf("\e[1;1H\e[2J");
+        printf("%-10s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
+        printf("%-10s%-25s%-25s%-15i%-25s%-15s\n", (clienteSel->user->dni), (clienteSel->user->nombreApellidos), (clienteSel->user->fechaNacimiento), (clienteSel->user->telefono), (clienteSel->user->email), (clienteSel->domicilio));
 
-    opcionesCltes(clienteSel);
+        opcionesCltes(clienteSel);
+        free(clienteSel);
+    }
+    else
+        printf("\nNO HAY CLIENTES PARA MOSTRAR\n");
 
     free(input);
     free(index);
-    free(clienteSel);
 }
 
 void opcionesCltes(Cliente *cli)
@@ -273,7 +278,7 @@ void modificarDatos(Profesional *prof)
 {
 
     char *input, *selec;
-    input = malloc(10 * sizeof(char));
+    input = malloc(30 * sizeof(char));
     selec = malloc(sizeof(char));
 
     do
@@ -287,15 +292,42 @@ void modificarDatos(Profesional *prof)
         case '1':
             printf("INTRODUCE EL NUEVO TELEFONO: \n");
             fgets(input, 10, stdin);
-            sscanf(input, "%c", input);
+            sscanf(input, "%s", input);
             fflush(stdin);
-            printf("%i\n", modificarProfesional(selec, prof, input));
+            if (modificarProfesional(selec, prof, input) == 101)
+            {
+                printf("CAMBIO COMPLETADO SATISFACTORIAMENTE\n");
+                prof->user->telefono = atoi(input);
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
+
             break;
         case '2':
-
+            printf("INTRODUCE EL NUEVO CORREO: \n");
+            fgets(input, 30, stdin);
+            sscanf(input, "%s", input);
+            fflush(stdin);
+            if (modificarProfesional(selec, prof, input) == 101)
+            {
+                printf("CAMBIO COMPLETADO SATISFACTORIAMENTE\n");
+                strcpy(prof->user->email, *input);
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
             break;
         case '3':
-
+            printf("INTRODUCE EL NUEVO CONTRASENA: \n");
+            fgets(input, 11, stdin);
+            sscanf(input, "%s", input);
+            fflush(stdin);
+            if (modificarProfesional(selec, prof, input) == 101)
+            {
+                printf("CAMBIO COMPLETADO SATISFACTORIAMENTE\n");
+                strcpy(prof->user->contrasenya, *input);
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");

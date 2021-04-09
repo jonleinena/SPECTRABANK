@@ -76,10 +76,11 @@ Profesional *getInfoProfesional(char *email)
         prof->user->telefono = sqlite3_column_int(res, 6);
     }
 
-    sqlite3_finalize(res);
-
     return prof;
+    free(prof);
 }
+
+//ESTE METODO SE USA PARA ALGO??
 
 Cliente *getInfoCliente(char *email)
 {

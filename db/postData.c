@@ -13,37 +13,45 @@ int modificarProfesional(char *selec, Profesional *prof, char *input)
     sqlite3_stmt *res;
 
     char *sql;
+    char *sql1 = "UPDATE PROFESIONAL SET TELEFONO = ? WHERE ID_PROF = ?";
+    char *sql2 = "UPDATE PROFESIONAL SET CORREO = ? WHERE ID_PROF = ?";
+    char *sql3 = "UPDATE PROFESIONAL SET TELEFONO = ? WHERE ID_PROF = ?";
+
     switch (*selec)
     {
     case '1':
-        strcpy(sql, "UPDATE PROFESIONAL SET TELEFONO = ? WHERE ID_PROF = ?");
+        sql = sql1;
         break;
     case '2':
-        strcpy(sql, "UPDATE PROFESIONAL SET CORREO = ? WHERE ID_PROF = ?");
+        sql = sql2;
         break;
     case '3':
-        strcpy(sql, "UPDATE PROFESIONAL SET TELEFONO = ? WHERE ID_PROF = ?");
+        sql = sql3;
         break;
     default:
         break;
     }
 
+    //printf("%s\n", sql);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
+
         switch (*selec)
         {
         case '1':
-            sqlite3_bind_text(res, 1, input, (strlen(input) - 1), SQLITE_STATIC);
+
+            sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
             sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
+
             break;
         case '2':
-            sqlite3_bind_text(res, 1, input, (strlen(input) - 1), SQLITE_STATIC);
+            sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
             sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
             break;
         case '3':
-            sqlite3_bind_text(res, 1, input, (strlen(input) - 1), SQLITE_STATIC);
+            sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
             sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
             break;
         default:
@@ -55,5 +63,8 @@ int modificarProfesional(char *selec, Profesional *prof, char *input)
         fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
     }
 
-    return 0;
+    int step = sqlite3_step(res);
+    sqlite3_finalize(res);
+
+    return step;
 }
