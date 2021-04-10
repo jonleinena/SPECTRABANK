@@ -24,7 +24,7 @@ typedef struct
 
 typedef struct
 {
-    char iban[24];
+    char iban[25];
     float saldo;
     char fechaCreacion[20];
     char dniPropietario[9];
@@ -56,8 +56,8 @@ typedef struct
 typedef struct
 {
     int idTransaccion;
-    char ibanOrigen[24];
-    char ibanDestino[24];
+    char ibanOrigen[25];
+    char ibanDestino[25];
     float importe;
     char fecha[20];
     char concepto[30];

@@ -171,7 +171,6 @@ Cliente **getListaClientes(char *idProf)
         strcpy((*(lista + i))->domicilio, sqlite3_column_text(res, 5));
         strcpy((*(lista + i))->user->fechaNacimiento, sqlite3_column_text(res, 6));
 
-
         i++;
         step = sqlite3_step(res);
     }
@@ -196,6 +195,7 @@ Cuenta *getCuentasCliente(char *dniCliente)
 
     if (rc == SQLITE_OK && rc1 == SQLITE_OK)
     {
+
         sqlite3_bind_text(res, 1, dniCliente, (strlen(dniCliente)), SQLITE_STATIC);
         sqlite3_bind_text(res1, 1, dniCliente, (strlen(dniCliente)), SQLITE_STATIC);
     }
@@ -217,7 +217,7 @@ Cuenta *getCuentasCliente(char *dniCliente)
         (listaCuentas + i)->saldo = sqlite3_column_double(res, 1);
         strcpy((listaCuentas + i)->fechaCreacion, sqlite3_column_text(res, 2));
         strcpy((listaCuentas + i)->dniPropietario, sqlite3_column_text(res, 3));
-        
+
         step = sqlite3_step(res);
         i++;
     }
@@ -373,8 +373,8 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
     char *err_msg = 0;
     sqlite3_stmt *res, *res1;
 
-    char *sql = "SELECT * FROM PRESTAMO WHERE ID_PROF = ? AND ESTADO = ?";
-    char *sql1 = "SELECT COUNT(*) FROM PRESTAMO WHERE ID_PROF = ? AND ESTADO = ?";
+    char *sql = "SELECT * FROM PRESTAMO WHERE ID_PROF = ? AND ESTADO = 1";
+    char *sql1 = "SELECT COUNT(*) FROM PRESTAMO WHERE ID_PROF = ? AND ESTADO = 1";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
     rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
@@ -382,9 +382,7 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
     if (rc == SQLITE_OK && rc1 == SQLITE_OK)
     {
         sqlite3_bind_text(res, 1, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
-        sqlite3_bind_int(res, 2, 1);
         sqlite3_bind_text(res1, 1, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
-        sqlite3_bind_int(res1, 2, 1);
     }
     else
     {
@@ -402,17 +400,12 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
     while (step == SQLITE_ROW)
     {
         (listaPrestamosPendientes + i)->idPres = sqlite3_column_int(res, 0);
-        printf("%i", i);
         strcpy((listaPrestamosPendientes + i)->cli->user->dni, sqlite3_column_text(res, 1));
-        printf("%s",(listaPrestamosPendientes + i)->cli->user->dni);
         (listaPrestamosPendientes + i)->importe = sqlite3_column_double(res, 3);
-        printf("%i", i);
         strcpy((listaPrestamosPendientes + i)->fechaSoli, sqlite3_column_text(res, 4));
-        printf("%i", i);
         i++;
         step = sqlite3_step(res);
     }
-    
 
     return listaPrestamosPendientes;
     free(listaPrestamosPendientes);

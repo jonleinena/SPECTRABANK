@@ -21,7 +21,7 @@ void menuProfesional(Profesional *prof)
 
     do
     {
-        printf(FGREN"**********************Bienvenido, %s**********************\n", prof->user->nombreApellidos);
+        printf(FGREN "**********************Bienvenido, %s**********************\n", prof->user->nombreApellidos);
         printf(FCYAN
                "1.- Ver listado de clientes\n"
                "2.- Solicitudes de prestamo\n"
@@ -85,23 +85,26 @@ void imprimirListaClientes(Cliente **lista)
         {
             printf("Introduce indice del cliente o la letra q para salir: ");
             fgets(input, 4, stdin);
-            if(*input != 'q'){
+            if (*input != 'q')
+            {
                 sscanf(input, "%i", index);
                 fflush(stdin);
-                
-                
-                if ((*index < 0) || (*index > numFilas)){
-                    printf(FRED"Introduzca un indice valido\n"FCYAN);
-                } else{
-                    printf("A\n");
+
+                if ((*index < 0) || (*index > numFilas))
+                {
+                    printf(FRED "Introduzca un indice valido\n" FCYAN);
+                }
+                else
+                {
                     valorAceptable = 1;
                 }
+            }
+            fflush(stdin);
 
-            } fflush(stdin);
-            
         } while (*input != 'q' && valorAceptable == 0);
 
-        if (*input != 'q'){
+        if (*input != 'q')
+        {
             Cliente *clienteSel;
             clienteSel = (Cliente *)malloc(sizeof(Cliente));
             clienteSel = (*(lista + *index));
@@ -137,10 +140,14 @@ void opcionesCltes(Cliente *cli)
         fgets(input, 2, stdin); //ponemos 2 al fgets porque hay 3 opciones, pero si metes el 12 entra
         sscanf(input, "%c", input);
         fflush(stdin);
-        if(*input != '0' && *input != '1' && *input != '2' && *input != '3' && *input != 'q'){
+
+        if (*input != '0' && *input != '1' && *input != '2' && *input != '3' && *input != 'q')
+        {
             printf("\e[1;1H\e[2J");
-            printf(FRED"Inserte un valor valido\n"FCYAN);
-        } else{
+            printf(FRED "Inserte un valor valido\n" FCYAN);
+        }
+        else
+        {
             switch (*input)
             {
             case '1':
@@ -153,15 +160,15 @@ void opcionesCltes(Cliente *cli)
                 mostrarPrestamos(cli);
                 break;
             case 'q':
-                printf(FRED "\nSaliendo.\n\n"FCYAN);
+                printf(FRED "\nSaliendo.\n\n" FCYAN);
                 printf("\e[1;1H\e[2J");
                 break;
             default:
-                printf(FRED "\nIntroduce una opcion valida, por favor.\n\n"FCYAN);
+                printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
                 break;
             }
         }
-        
+
     } while (*input > 3 && *input != 'q');
 
     free(input);
@@ -173,8 +180,6 @@ void mostrarCuentas(Cliente *cli)
     input = malloc(sizeof(char));
     int *index;
     index = malloc(sizeof(int));
-    char *selec;
-    selec = malloc(sizeof(char));
 
     Cuenta *listaCuentas;
     listaCuentas = malloc(30 * sizeof(Cuenta));
@@ -182,10 +187,10 @@ void mostrarCuentas(Cliente *cli)
     realloc(listaCuentas, numFilas * sizeof(Cuenta)); // resize the memory block pointed to by listaCuentas
 
     printf("\n************ CUENTAS DE %s**************\n", (cli->user->nombreApellidos));
-    printf("%-10s%-25s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
+    printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
     for (int i = 0; i < numFilas; i++)
     {
-        printf("%-10d%-25s%-15.2f%-25s%-10s\n", i, (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
+        printf("%-10d%-30s%-15.2f%-25s%-10s\n", i, (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
     }
 
     do
@@ -200,19 +205,23 @@ void mostrarCuentas(Cliente *cli)
         {
         case '1':
             printf("INTRODUZCA EL INDICE DE LA CUENTA\n");
-            fgets(selec, 3, stdin);
-            sscanf(selec, "%i", index);
+            fgets(index, 4, stdin);
+            sscanf(index, "%i", index);
             fflush(stdin);
-            if(*index<numFilas){
-                printf(FRED"Introduce un indice valido\n"FCYAN);
+            if (*index < 0 || *index > numFilas)
+            {
+                printf(FRED "Introduce un indice valido\n" FCYAN);
             }
-            verMovimientos((listaCuentas + *index));
+            else
+            {
+                verMovimientos((listaCuentas + *index));
+            }
             break;
         case 'q':
-            printf(FRED"\nSaliendo.\n\n"FCYAN);
+            printf(FRED "\nSaliendo.\n\n" FCYAN);
             break;
         default:
-            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n"FCYAN);
+            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
             break;
         }
 
@@ -220,7 +229,6 @@ void mostrarCuentas(Cliente *cli)
 
     free(input);
     free(index);
-    free(selec);
 }
 
 void mostrarInversiones(Cliente *cli)
@@ -230,7 +238,8 @@ void mostrarInversiones(Cliente *cli)
 
     printf("\e[1;1H\e[2J");
 
-    do{
+    do
+    {
         Inversion *listaInversiones;
         listaInversiones = malloc(30 * sizeof(Inversion));
         listaInversiones = getInversionClite(cli->user->dni);
@@ -247,8 +256,8 @@ void mostrarInversiones(Cliente *cli)
         fgets(input, 2, stdin);
         sscanf(input, "%c", input);
         fflush(stdin);
-    
-    } while(*input !='\n');
+
+    } while (*input != '\n');
 
     printf("\e[1;1H\e[2J");
     free(input);
@@ -258,10 +267,11 @@ void mostrarPrestamos(Cliente *cli)
 {
     char *input;
     input = malloc(sizeof(char));
-    
+
     printf("\e[1;1H\e[2J");
 
-    do{
+    do
+    {
         Prestamo *listaPrestamos;
         listaPrestamos = (Prestamo *)malloc(15 * sizeof(Prestamo));
         listaPrestamos = getPrestamos(cli->user->dni);
@@ -279,7 +289,7 @@ void mostrarPrestamos(Cliente *cli)
         sscanf(input, "%c", input);
         fflush(stdin);
 
-    } while(*input !='\n');
+    } while (*input != '\n');
 
     printf("\e[1;1H\e[2J");
     free(input);
@@ -293,10 +303,10 @@ void verMovimientos(Cuenta *cue)
     realloc(movimientos, numFilas * sizeof(Movimiento));
 
     printf("\n************ MOVIMIENTOS CUENTA %s**************\n", cue->iban);
-    printf("%-10s%-25s%-25s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
+    printf("%-10s%-30s%-30s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
     for (int i = 0; i < numFilas; i++)
     {
-        printf("%-10i%-25s%-25s%-10.2f%-25s%-25s\n", (movimientos + i)->idTransaccion, (movimientos + i)->ibanOrigen, (movimientos + i)->ibanDestino, (movimientos + i)->importe, (movimientos + i)->fecha, (movimientos + i)->concepto);
+        printf("%-10i%-30s%-30s%-10.2f%-25s%-25s\n", (movimientos + i)->idTransaccion, (movimientos + i)->ibanOrigen, (movimientos + i)->ibanDestino, (movimientos + i)->importe, (movimientos + i)->fecha, (movimientos + i)->concepto);
     }
 }
 
@@ -306,9 +316,9 @@ void verSolicitudesPrestamo(Profesional *prof)
     input = malloc(sizeof(char));
     int *index;
     index = malloc(sizeof(int));
-    
+
     Prestamo *listaPrestamosPendientes;
-    listaPrestamosPendientes = (Prestamo *) malloc(40 * sizeof(Prestamo));
+    listaPrestamosPendientes = (Prestamo *)malloc(40 * sizeof(Prestamo));
     listaPrestamosPendientes = getSolicitudesPrestamo(prof);
     realloc(listaPrestamosPendientes, numFilas * sizeof(Prestamo));
 
@@ -334,19 +344,17 @@ void verSolicitudesPrestamo(Profesional *prof)
             fgets(input, 2, stdin);
             sscanf(input, "%i", index);
             fflush(stdin);
-            
+
             break;
         case 'q':
-            printf(FRED"\nSaliendo.\n\n"FCYAN);
+            printf(FRED "\nSaliendo.\n\n" FCYAN);
             break;
         default:
-            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n"FCYAN);
+            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
             break;
         }
 
     } while (*input != 'q');
-
-
 }
 
 void verDatosProfesional(Profesional *prof)
@@ -357,7 +365,7 @@ void verDatosProfesional(Profesional *prof)
 
     do
     {
-        printf(FCYAN"%-15s%-10s%-25s%-25s%-15s%-25s\n", "idProfesional", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO");
+        printf(FCYAN "%-15s%-10s%-25s%-25s%-15s%-25s\n", "idProfesional", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO");
         printf("%-15s%-10s%-25s%-25s%-15i%-25s\n", (prof->idProfesional), (prof->user->dni), (prof->user->nombreApellidos), (prof->user->fechaNacimiento), (prof->user->telefono), (prof->user->email));
         printf("1.-Modificar datos\nq.-Salir\n");
         fgets(input, 2, stdin);
