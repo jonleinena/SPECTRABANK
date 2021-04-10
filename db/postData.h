@@ -7,5 +7,6 @@
 #define postData
 
 int modificarProfesional(char *selec, Profesional *prof, char *input);
+int modificarPrestamoADenegado(int *idPrestamo);
 
 #endif

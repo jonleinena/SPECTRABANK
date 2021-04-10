@@ -11,7 +11,7 @@
 
 
 
-float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversiones, Cuenta *cuentas, int numeroCuentas){
+float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversiones, Cuenta *cuentas, int numeroCuentas, int *idPrestamo){
     float tin;
     float patrimonioClte = 0.0;
     for (int i = 0; i<numeroInversiones; i++){
@@ -21,6 +21,8 @@ float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversio
     for(int j = 0; j<numeroCuentas; j++){
         patrimonioClte = patrimonioClte + (cuentas+j)->saldo;
     }
+
+    //1º Apartado de la Lógica
 
     if(patrimonioClte/pres->importe > 1.00){
 
@@ -34,10 +36,13 @@ float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversio
             tin = 0.03;
 
     }else{
-
+        //Inserta en la base de datos en la tabla del Prestamo en el apartado idprestamo el prestamo como "denegado"
+        modificarPrestamoADenegado(*idPrestamo);
     }
         
-    }  
+    }
+
+
 
     float a = 0.00;
     
