@@ -47,6 +47,7 @@ void menuProfesional(Profesional *prof)
             printf("\n");
             break;
         case '2':
+            verSolicitudesPrestamo(prof);
             break;
         case '3':
             verDatosProfesional(prof);
@@ -181,7 +182,7 @@ void mostrarCuentas(Cliente *cli)
             fgets(selec, 2, stdin);
             sscanf(selec, "%i", index);
             fflush(stdin);
-            verMovimientos((listaCuentas + *index), &numFilas);
+            verMovimientos((listaCuentas + *index));
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");
@@ -228,20 +229,68 @@ void mostrarPrestamos(Cliente *cli)
     }
 }
 
-//Hacer este metodo (el getData esta ya)
-void verMovimientos(Cuenta *cue, int *numFilas)
+void verMovimientos(Cuenta *cue)
 {
     Movimiento *movimientos;
     movimientos = (Movimiento *)malloc(40 * sizeof(Movimiento));
-    movimientos = getMovimientos(cue, numFilas);
-    realloc(movimientos, *numFilas * sizeof(Movimiento));
+    movimientos = getMovimientos(cue, &numFilas);
+    realloc(movimientos, numFilas * sizeof(Movimiento));
 
     printf("\n************ MOVIMIENTOS CUENTA %s**************\n", cue->iban);
     printf("%-10s%-25s%-25s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
-    for (int i = 0; i < *numFilas; i++)
+    for (int i = 0; i < numFilas; i++)
     {
         printf("%-10i%-25s%-25s%-10.2f%-25s%-25s\n", (movimientos + i)->idTransaccion, (movimientos + i)->ibanOrigen, (movimientos + i)->ibanDestino, (movimientos + i)->importe, (movimientos + i)->fecha, (movimientos + i)->concepto);
     }
+}
+
+void verSolicitudesPrestamo(Profesional *prof)
+{
+    char *input;
+    input = malloc(sizeof(char));
+    int *index;
+    index = malloc(sizeof(int));
+    
+    Prestamo *listaPrestamosPendientes;
+    listaPrestamosPendientes = (Prestamo *) malloc(40 * sizeof(Prestamo));
+    listaPrestamosPendientes = getSolicitudesPrestamo(prof, &numFilas);
+    realloc(listaPrestamosPendientes, numFilas * sizeof(Prestamo));
+
+    printf("\n************ TIENES %i SOLICITUDES PENDIENTES **************\n", numFilas);
+    printf("%-10s%-15s%-14s%-25s\n", "ID", "CLIENTE", "IMPORTE", "FECHA SOLICITUD");
+    for (int i = 0; i < numFilas; i++)
+    {
+        printf("%-10i%-15s%-14.2f%-25s\n", (listaPrestamosPendientes + i)->idPres, (listaPrestamosPendientes + i)->cli->user->dni, (listaPrestamosPendientes + i)->importe, (listaPrestamosPendientes + i)->fechaSoli);
+    }
+
+    do
+    {
+        printf(FCYAN
+               "\n1.- Procesar una solicitud\n"
+               "q.- Atras\n");
+        fgets(input, 2, stdin);
+        sscanf(input, "%c", input);
+        fflush(stdin);
+        switch (*input)
+        {
+        case '1':
+            printf("Introduzca el ID de la solicitud: \n");
+            fgets(input, 2, stdin);
+            sscanf(input, "%i", index);
+            fflush(stdin);
+            
+            break;
+        case 'q':
+            printf(FRED "\nSaliendo.\n\n");
+            break;
+        default:
+            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
+            break;
+        }
+
+    } while (*input != 'q');
+
+
 }
 
 void verDatosProfesional(Profesional *prof)
@@ -311,7 +360,7 @@ void modificarDatos(Profesional *prof)
             if (modificarProfesional(selec, prof, input) == 101)
             {
                 printf("CAMBIO COMPLETADO SATISFACTORIAMENTE\n");
-                strcpy(prof->user->email, *input);
+                strcpy(prof->user->email, input);
             }
             else
                 printf("ERROR EN EL GUARDADO DE DATOS\n");
@@ -324,7 +373,7 @@ void modificarDatos(Profesional *prof)
             if (modificarProfesional(selec, prof, input) == 101)
             {
                 printf("CAMBIO COMPLETADO SATISFACTORIAMENTE\n");
-                strcpy(prof->user->contrasenya, *input);
+                strcpy(prof->user->contrasenya, input);
             }
             else
                 printf("ERROR EN EL GUARDADO DE DATOS\n");

@@ -13,7 +13,6 @@ int getLogin(char *email, char *contrasenya)
     char *err_msg = 0;
     sqlite3_stmt *res;
 
-    //TODO - OPTIMIZAR ESTO
     char *sql = "SELECT P.CONTRASENYA, C.CONTRASENYA FROM PROFESIONAL P, CLIENTE C WHERE P.CORREO = ? OR C.CORREO = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
@@ -350,22 +349,68 @@ Movimiento *getMovimientos(Cuenta *cue, int *numFilas)
     int step1 = sqlite3_step(res1);
     *numFilas = sqlite3_column_int(res1, 0);
 
-    Movimiento *listaMovimientos;
-    listaMovimientos = (Movimiento *)malloc(*numFilas * sizeof(Movimiento));
+    Movimiento *movimientos;
+    movimientos = (Movimiento *)malloc(*numFilas * sizeof(Movimiento));
 
     int i = 0;
     while (step == SQLITE_ROW)
     {
-        (listaMovimientos + i)->idTransaccion = sqlite3_column_int(res, 0);
-        strcpy((listaMovimientos + i)->ibanOrigen, sqlite3_column_text(res, 1));
-        strcpy((listaMovimientos + i)->ibanDestino, sqlite3_column_text(res, 2));
-        (listaMovimientos + i)->importe = sqlite3_column_double(res, 3);
-        strcpy((listaMovimientos + i)->fecha, sqlite3_column_text(res, 4));
-        strcpy((listaMovimientos + i)->concepto, sqlite3_column_text(res, 5));
+        (movimientos + i)->idTransaccion = sqlite3_column_int(res, 0);
+        strcpy((movimientos + i)->ibanOrigen, sqlite3_column_text(res, 1));
+        strcpy((movimientos + i)->ibanDestino, sqlite3_column_text(res, 2));
+        (movimientos + i)->importe = sqlite3_column_double(res, 3);
+        strcpy((movimientos + i)->fecha, sqlite3_column_text(res, 4));
+        strcpy((movimientos + i)->concepto, sqlite3_column_text(res, 5));
         i++;
         step = sqlite3_step(res);
     }
 
-    return listaMovimientos;
-    free(listaMovimientos);
+    return movimientos;
+    free(movimientos);
+}
+
+Prestamo *getSolicitudesPrestamo(Profesional *prof, int *numFilas)
+{
+    int rc, rc1;
+    char *err_msg = 0;
+    sqlite3_stmt *res, *res1;
+
+    char *sql = "SELECT * FROM PRESTAMO WHERE ID_PROF = ? AND ESTADO = ?";
+    char *sql1 = "SELECT COUNT(*) FROM PRESTAMO WHERE ID_PROF = ? AND ESTADO = ?";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
+
+    if (rc == SQLITE_OK && rc1 == SQLITE_OK)
+    {
+        sqlite3_bind_text(res, 1, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
+        sqlite3_bind_int(res, 2, 1);
+        sqlite3_bind_text(res1, 1, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
+        sqlite3_bind_int(res1, 2, 1);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+    int step1 = sqlite3_step(res1);
+    *numFilas = sqlite3_column_int(res1, 0);
+
+    Prestamo *listaPrestamosPendientes;
+    listaPrestamosPendientes = (Prestamo *)malloc(*numFilas * sizeof(Prestamo));
+
+    int i = 0;
+    while (step == SQLITE_ROW)
+    {
+        (listaPrestamosPendientes + i)->idPres = sqlite3_column_int(res, 0);
+        strcpy((listaPrestamosPendientes + i)->cli->user->dni, sqlite3_column_text(res, 1));
+        (listaPrestamosPendientes + i)->importe = sqlite3_column_double(res, 3);
+        strcpy((listaPrestamosPendientes + i)->fechaSoli, sqlite3_column_text(res, 4));
+        i++;
+        step = sqlite3_step(res);
+    }
+
+    return listaPrestamosPendientes;
+    free(listaPrestamosPendientes);
 }

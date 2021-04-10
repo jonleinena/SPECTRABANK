@@ -9,7 +9,8 @@ void opcionesCltes(Cliente *cli);
 void mostrarCuentas(Cliente *cliente);
 void mostrarInversiones(Cliente *cliente);
 void mostrarPrestamos(Cliente *cliente);
-void verMovimientos(Cuenta *cue, int *numFilas);
+void verMovimientos(Cuenta *cue);
+void verSolicitudesPrestamo(Profesional *prof);
 void verDatosProfesional(Profesional *prof);
 void modificarDatos(Profesional *prof);
 

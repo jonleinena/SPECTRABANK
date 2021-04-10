@@ -45,6 +45,7 @@ typedef struct
     int idPres;
     float importe;
     char idProfesional[7];
+    char fechaSoli[20];
     char fechaEmision[20];
     char fechaDevol[20];
     char fechaComp[20];

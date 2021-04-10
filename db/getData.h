@@ -12,5 +12,6 @@ Cuenta *getCuentasCliente(char *dniCliente, int *numFilas);
 Inversion *getInversionClite(Cliente *cli, int *numFilas);
 Prestamo *getPrestamos(Cliente *cli, int *numFilas);
 Movimiento *getMovimientos(Cuenta *cue, int *numFilas);
+Prestamo *getSolicitudesPrestamo(Profesional *prof, int *numFilas);
 
 #endif
