@@ -4,14 +4,16 @@
 #ifndef getData
 #define getData
 
+extern int numFilas;
+
 int getLogin(char *email, char *contrasenya);
 Profesional *getInfoProfesional(char *email);
 Cliente *getInfoCliente(char *email);
-Cliente **getListaClientes(char *idProf, int *numFilas);
-Cuenta *getCuentasCliente(char *dniCliente, int *numFilas);
-Inversion *getInversionClite(Cliente *cli, int *numFilas);
-Prestamo *getPrestamos(Cliente *cli, int *numFilas);
-Movimiento *getMovimientos(Cuenta *cue, int *numFilas);
-Prestamo *getSolicitudesPrestamo(Profesional *prof, int *numFilas);
+Cliente **getListaClientes(char *idProf);
+Cuenta *getCuentasCliente(char *dniCliente);
+Inversion *getInversionClite(char *dniCli);
+Prestamo *getPrestamos(char *dniCli);
+Movimiento *getMovimientos(Cuenta *cue);
+Prestamo *getSolicitudesPrestamo(Profesional *prof);
 
 #endif

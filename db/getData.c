@@ -6,6 +6,8 @@
 #include "../lib/sqlite3/sqlite3.h"
 #include "../utils/structures.h"
 
+int numFilas = 1;
+
 int getLogin(char *email, char *contrasenya)
 {
     int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
@@ -122,13 +124,13 @@ Cliente *getInfoCliente(char *email)
     return cli;
 }
 
-Cliente **getListaClientes(char *idProf, int *numFilas)
+Cliente **getListaClientes(char *idProf)
 {
     int rc, rc1;
     char *err_msg = 0;
     sqlite3_stmt *res, *res1;
 
-    char *sql = "SELECT DNI, CONTRASENYA, NOMBRE, NUM_TEL, CORREO, FEC_NAC, DOMICILIO FROM CLIENTE WHERE ID_PROF = ? ORDER BY DNI ASC";
+    char *sql = "SELECT * FROM CLIENTE WHERE ID_PROF = ? ORDER BY DNI ASC";
     char *sql1 = "SELECT COUNT(*) FROM CLIENTE WHERE ID_PROF = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
@@ -147,11 +149,11 @@ Cliente **getListaClientes(char *idProf, int *numFilas)
     int step = sqlite3_step(res);
     int step1 = sqlite3_step(res1);
 
-    *numFilas = sqlite3_column_int(res1, 0);
+    numFilas = sqlite3_column_int(res1, 0);
 
     Cliente **lista;
-    lista = (Cliente **)malloc((*numFilas) * sizeof(Cliente *));
-    for (int i = 0; i < *numFilas; i++)
+    lista = (Cliente **)malloc(numFilas * sizeof(Cliente *));
+    for (int i = 0; i < numFilas; i++)
     {
         *(lista + i) = (Cliente *)malloc(sizeof(Cliente));
         (*(lista + i))->user = (Usuario *)malloc(sizeof(Usuario));
@@ -159,29 +161,27 @@ Cliente **getListaClientes(char *idProf, int *numFilas)
 
     int i = 0;
 
-    while (step == SQLITE_ROW && i <= *numFilas)
+    while (step == SQLITE_ROW)
     {
-
         strcpy((*(lista + i))->user->dni, sqlite3_column_text(res, 0));
         strcpy((*(lista + i))->user->contrasenya, sqlite3_column_text(res, 1));
         strcpy((*(lista + i))->user->nombreApellidos, sqlite3_column_text(res, 2));
         (*(lista + i))->user->telefono = sqlite3_column_int(res, 3);
         strcpy((*(lista + i))->user->email, sqlite3_column_text(res, 4));
-        strcpy((*(lista + i))->user->fechaNacimiento, sqlite3_column_text(res, 5));
-        strcpy((*(lista + i))->domicilio, sqlite3_column_text(res, 6));
+        strcpy((*(lista + i))->domicilio, sqlite3_column_text(res, 5));
+        strcpy((*(lista + i))->user->fechaNacimiento, sqlite3_column_text(res, 6));
 
+
+        i++;
         step = sqlite3_step(res);
-
-        i += 1;
     }
 
     sqlite3_finalize(res);
 
     return lista;
-
     free(lista); //El resto de punteros se liberan desde el menu, accediendo a ellos a traves del puntero que se crea ahi
 }
-Cuenta *getCuentasCliente(char *dniCliente, int *numFilas)
+Cuenta *getCuentasCliente(char *dniCliente)
 {
 
     int rc, rc1;
@@ -206,12 +206,12 @@ Cuenta *getCuentasCliente(char *dniCliente, int *numFilas)
 
     int step = sqlite3_step(res);
     int step1 = sqlite3_step(res1);
-    *numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
+    numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
 
     Cuenta *listaCuentas;
-    listaCuentas = (Cuenta *)malloc((*numFilas) * sizeof(Cuenta));
+    listaCuentas = (Cuenta *)malloc((numFilas) * sizeof(Cuenta));
     int i = 0;
-    while (step == SQLITE_ROW && i < *numFilas)
+    while (step == SQLITE_ROW)
     {
         strcpy((listaCuentas + i)->iban, sqlite3_column_text(res, 0));
         (listaCuentas + i)->saldo = sqlite3_column_double(res, 1);
@@ -225,7 +225,7 @@ Cuenta *getCuentasCliente(char *dniCliente, int *numFilas)
     free(listaCuentas);
 }
 
-Inversion *getInversionClite(Cliente *cli, int *numFilas)
+Inversion *getInversionClite(char *dniCliente)
 {
 
     int rc, rc1;
@@ -240,8 +240,8 @@ Inversion *getInversionClite(Cliente *cli, int *numFilas)
 
     if (rc == SQLITE_OK && rc1 == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
-        sqlite3_bind_text(res1, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
+        sqlite3_bind_text(res, 1, dniCliente, strlen(dniCliente), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, dniCliente, strlen(dniCliente), SQLITE_STATIC);
     }
     else
     {
@@ -250,15 +250,14 @@ Inversion *getInversionClite(Cliente *cli, int *numFilas)
 
     int step = sqlite3_step(res);
     int step1 = sqlite3_step(res1);
-    *numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
+    numFilas = sqlite3_column_int(res1, 0); //PARA SABER CUANTAS FILAS HAY TRAS LA QUERY Y RESERVAR MEMORIA EN FUNVCION A ELLO
 
     Inversion *listaInversiones;
-    listaInversiones = (Inversion *)malloc(*numFilas * sizeof(Inversion));
+    listaInversiones = (Inversion *)malloc(numFilas * sizeof(Inversion));
 
     int i = 0;
-    while (step == SQLITE_ROW && i < *numFilas)
+    while (step == SQLITE_ROW)
     {
-        (listaInversiones + i)->cli = cli;
         strcpy((listaInversiones + i)->idCompania, sqlite3_column_text(res, 1));
         (listaInversiones + i)->valorCompra = sqlite3_column_double(res, 2);
         (listaInversiones + i)->cantidad = sqlite3_column_double(res, 3);
@@ -271,9 +270,8 @@ Inversion *getInversionClite(Cliente *cli, int *numFilas)
     free(listaInversiones);
 }
 
-Prestamo *getPrestamos(Cliente *cli, int *numFilas)
+Prestamo *getPrestamos(char *dniCliente)
 {
-
     int rc, rc1;
     char *err_msg = 0;
     sqlite3_stmt *res, *res1;
@@ -286,8 +284,8 @@ Prestamo *getPrestamos(Cliente *cli, int *numFilas)
 
     if (rc == SQLITE_OK && rc1 == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
-        sqlite3_bind_text(res1, 1, cli->user->dni, (strlen(cli->user->dni)), SQLITE_STATIC);
+        sqlite3_bind_text(res, 1, dniCliente, strlen(dniCliente), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, dniCliente, strlen(dniCliente), SQLITE_STATIC);
     }
     else
     {
@@ -296,16 +294,15 @@ Prestamo *getPrestamos(Cliente *cli, int *numFilas)
 
     int step = sqlite3_step(res);
     int step1 = sqlite3_step(res1);
-    *numFilas = sqlite3_column_int(res1, 0);
+    numFilas = sqlite3_column_int(res1, 0);
 
     Prestamo *listaPrestamos;
-    listaPrestamos = (Prestamo *)malloc(*numFilas * sizeof(Prestamo));
+    listaPrestamos = (Prestamo *)malloc(numFilas * sizeof(Prestamo));
 
     int i = 0;
     while (step == SQLITE_ROW)
     {
         (listaPrestamos + i)->idPres = sqlite3_column_int(res, 0);
-        (listaPrestamos + i)->cli = cli;
         strcpy((listaPrestamos + i)->idProfesional, sqlite3_column_text(res, 2));
         (listaPrestamos + i)->importe = sqlite3_column_double(res, 3);
         strcpy((listaPrestamos + i)->fechaEmision, sqlite3_column_text(res, 4));
@@ -321,7 +318,7 @@ Prestamo *getPrestamos(Cliente *cli, int *numFilas)
     free(listaPrestamos);
 }
 
-Movimiento *getMovimientos(Cuenta *cue, int *numFilas)
+Movimiento *getMovimientos(Cuenta *cue)
 {
     int rc, rc1;
     char *err_msg = 0;
@@ -347,10 +344,10 @@ Movimiento *getMovimientos(Cuenta *cue, int *numFilas)
 
     int step = sqlite3_step(res);
     int step1 = sqlite3_step(res1);
-    *numFilas = sqlite3_column_int(res1, 0);
+    numFilas = sqlite3_column_int(res1, 0);
 
     Movimiento *movimientos;
-    movimientos = (Movimiento *)malloc(*numFilas * sizeof(Movimiento));
+    movimientos = (Movimiento *)malloc(numFilas * sizeof(Movimiento));
 
     int i = 0;
     while (step == SQLITE_ROW)
@@ -369,7 +366,7 @@ Movimiento *getMovimientos(Cuenta *cue, int *numFilas)
     free(movimientos);
 }
 
-Prestamo *getSolicitudesPrestamo(Profesional *prof, int *numFilas)
+Prestamo *getSolicitudesPrestamo(Profesional *prof)
 {
     int rc, rc1;
     char *err_msg = 0;
@@ -395,10 +392,10 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof, int *numFilas)
 
     int step = sqlite3_step(res);
     int step1 = sqlite3_step(res1);
-    *numFilas = sqlite3_column_int(res1, 0);
+    numFilas = sqlite3_column_int(res1, 0);
 
     Prestamo *listaPrestamosPendientes;
-    listaPrestamosPendientes = (Prestamo *)malloc(*numFilas * sizeof(Prestamo));
+    listaPrestamosPendientes = (Prestamo *)malloc(numFilas * sizeof(Prestamo));
 
     int i = 0;
     while (step == SQLITE_ROW)

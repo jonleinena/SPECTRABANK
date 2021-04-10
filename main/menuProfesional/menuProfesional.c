@@ -8,8 +8,6 @@
 #include "../../utils/colors.h"
 #include "../../utils/structures.h"
 
-int numFilas = 1;
-
 void menuProfesional(Profesional *prof)
 {
 
@@ -40,9 +38,9 @@ void menuProfesional(Profesional *prof)
         switch (*input)
         {
         case '1':
-            lista = getListaClientes((prof->idProfesional), &numFilas);
+            lista = getListaClientes((prof->idProfesional));
             realloc(lista, numFilas * sizeof(Cliente *));
-            imprimirListaClientes(lista, &numFilas);
+            imprimirListaClientes(lista);
 
             printf("\n");
             break;
@@ -54,7 +52,7 @@ void menuProfesional(Profesional *prof)
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");
-            for (int i = 0; i < *(&numFilas); i++)
+            for (int i = 0; i < numFilas; i++)
             {
                 free((*(lista + i))->user);
                 free(*(lista + i));
@@ -69,7 +67,7 @@ void menuProfesional(Profesional *prof)
     } while (*input != 'q');
 }
 
-void imprimirListaClientes(Cliente **lista, int *numElems)
+void imprimirListaClientes(Cliente **lista)
 {
     char *input;
     int *index;
@@ -77,12 +75,12 @@ void imprimirListaClientes(Cliente **lista, int *numElems)
     index = malloc(sizeof(int));
 
     printf("%-10s%-10s%-25s%-25s%-15s%-25s%-15s\n", "INDICE", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
-    for (int i = 0; i < *numElems; i++)
+    for (int i = 0; i < numFilas; i++)
     {
         printf("%-10i%-10s%-25s%-25s%-15i%-25s%-15s\n", i, ((*(lista + i))->user->dni), ((*(lista + i))->user->nombreApellidos), ((*(lista + i))->user->fechaNacimiento), ((*(lista + i))->user->telefono), ((*(lista + i))->user->email), ((*(lista + i))->domicilio));
     }
 
-    if (*numElems > 0)
+    if (numFilas > 0)
     {
         printf("Introduce indice del cliente o la letra q para salir: ");
         fgets(input, 2, stdin);
@@ -157,7 +155,7 @@ void mostrarCuentas(Cliente *cli)
 
     Cuenta *listaCuentas;
     listaCuentas = malloc(30 * sizeof(Cuenta));
-    listaCuentas = getCuentasCliente(cli->user->dni, &numFilas);
+    listaCuentas = getCuentasCliente(cli->user->dni);
     realloc(listaCuentas, numFilas * sizeof(Cuenta)); // resize the memory block pointed to by listaCuentas
 
     printf("\n************ CUENTAS DE %s**************\n", (cli->user->nombreApellidos));
@@ -203,7 +201,7 @@ void mostrarInversiones(Cliente *cli)
 {
     Inversion *listaInversiones;
     listaInversiones = malloc(30 * sizeof(Inversion));
-    listaInversiones = getInversionClite(cli, &numFilas);
+    listaInversiones = getInversionClite(cli->user->dni);
     realloc(listaInversiones, numFilas * sizeof(Inversion));
 
     printf("\n************ INVERSIONES DE %s**************\n", (cli->user->nombreApellidos));
@@ -218,7 +216,7 @@ void mostrarPrestamos(Cliente *cli)
 {
     Prestamo *listaPrestamos;
     listaPrestamos = (Prestamo *)malloc(15 * sizeof(Prestamo));
-    listaPrestamos = getPrestamos(cli, &numFilas);
+    listaPrestamos = getPrestamos(cli->user->dni);
     realloc(listaPrestamos, numFilas * sizeof(Prestamo));
 
     printf("\n************ PRESTAMOS DE %s**************\n", (cli->user->nombreApellidos));
@@ -233,7 +231,7 @@ void verMovimientos(Cuenta *cue)
 {
     Movimiento *movimientos;
     movimientos = (Movimiento *)malloc(40 * sizeof(Movimiento));
-    movimientos = getMovimientos(cue, &numFilas);
+    movimientos = getMovimientos(cue);
     realloc(movimientos, numFilas * sizeof(Movimiento));
 
     printf("\n************ MOVIMIENTOS CUENTA %s**************\n", cue->iban);
@@ -253,7 +251,7 @@ void verSolicitudesPrestamo(Profesional *prof)
     
     Prestamo *listaPrestamosPendientes;
     listaPrestamosPendientes = (Prestamo *) malloc(40 * sizeof(Prestamo));
-    listaPrestamosPendientes = getSolicitudesPrestamo(prof, &numFilas);
+    listaPrestamosPendientes = getSolicitudesPrestamo(prof);
     realloc(listaPrestamosPendientes, numFilas * sizeof(Prestamo));
 
     printf("\n************ TIENES %i SOLICITUDES PENDIENTES **************\n", numFilas);
