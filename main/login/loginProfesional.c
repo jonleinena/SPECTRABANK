@@ -42,12 +42,12 @@ void loginProfesional(void)
         if (resultLogin == 0)
         {
             printf("%sINICIO DE SESION CORRECTO\n", FGREN);
-            system("cls");
+            printf("\e[1;1H\e[2J");
             prof = getInfoProfesional(email);
             menuProfesional(prof);
         }
         else
-            printf("%sError en el inicio de sesion\n", FRED);
+            printf(FRED"Error en el inicio de sesion\n"FCYAN);
     } while (resultLogin != 0);
 
     free(email);
