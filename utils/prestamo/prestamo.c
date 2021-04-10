@@ -11,7 +11,7 @@
 
 
 
-float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversiones, Cuenta * cuentas, int numeroCuentas){
+float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversiones, Cuenta *cuentas, int numeroCuentas){
     float tin;
     float patrimonioClte = 0.0;
     for (int i = 0; i<numeroInversiones; i++){
@@ -22,14 +22,18 @@ float calcularInteres(Prestamo *pres, Inversion *inversiones, int numeroInversio
         patrimonioClte = patrimonioClte + (cuentas+j)->saldo;
     }
 
-    if(patrimonioClte/pres->importe >= 1.00){
+    if(patrimonioClte/pres->importe > 1.00){
 
-        if(patrimonioClte/pres->importe == 1){
-            tin;
+        if(patrimonioClte/pres->importe <= 1.67){
+            tin = 0.07;
         
-        }else if(patrimonioClte/pres->importe <= 1.5){
+        }else if(patrimonioClte/pres->importe <= 3.33){
+            tin = 0.04;
 
-        }else if(patrimonioClte/pres->importe >1.5){
+        }else if(patrimonioClte/pres->importe >3.33){
+            tin = 0.03;
+
+    }else{
 
     }
         
