@@ -15,5 +15,5 @@ Inversion *getInversionClite(char *dniCli);
 Prestamo *getPrestamos(char *dniCli);
 Movimiento *getMovimientos(Cuenta *cue);
 Prestamo *getSolicitudesPrestamo(Profesional *prof);
-
+int *getCountTipoPrestamo(char *dniCli);
 #endif

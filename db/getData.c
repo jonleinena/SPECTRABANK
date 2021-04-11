@@ -310,6 +310,7 @@ Prestamo *getPrestamos(char *dniCliente)
         sqlite3_column_text(res, 5) == NULL ? strcpy((listaPrestamos + i)->fechaDevol, "NULL") : strcpy((listaPrestamos + i)->fechaDevol, sqlite3_column_text(res, 5));
         sqlite3_column_text(res, 6) == NULL ? strcpy((listaPrestamos + i)->fechaComp, "NULL") : strcpy((listaPrestamos + i)->fechaComp, sqlite3_column_text(res, 6));
         (listaPrestamos + i)->tae = sqlite3_column_double(res, 7);
+        printf("%f\n", (listaPrestamos + i)->tae);
 
         i++;
         step = sqlite3_step(res);
@@ -411,5 +412,50 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
 
     return listaPrestamosPendientes;
     free(listaPrestamosPendientes);
+}
 
+int *getCountTipoPrestamo(char *dniCli)
+{
+    int rc1;
+    int rc2;
+    int rc3;
+    char *err_msg = 0;
+    sqlite3_stmt *res1, *res2, *res3;
+
+    char *sql1 = "SELECT COUNT() FROM PRESTAMO WHERE DNI_CLI = ? AND ESTADO = 1";
+    char *sql2 = "SELECT COUNT() FROM PRESTAMO WHERE DNI_CLI = ? AND ESTADO = 2";
+    char *sql3 = "SELECT COUNT() FROM PRESTAMO WHERE DNI_CLI = ? AND ESTADO = 3";
+
+    rc1 = sqlite3_prepare_v2(db, sql1, -1, &res1, 0);
+    rc2 = sqlite3_prepare_v2(db, sql2, -1, &res2, 0);
+    rc3 = sqlite3_prepare_v2(db, sql3, -1, &res3, 0);
+
+    if (rc1 == SQLITE_OK && rc2 == SQLITE_OK && rc3 == SQLITE_OK)
+    {
+        sqlite3_bind_text(res1, 1, dniCli, (strlen(dniCli)), SQLITE_STATIC);
+        sqlite3_bind_text(res2, 1, dniCli, (strlen(dniCli)), SQLITE_STATIC);
+        sqlite3_bind_text(res3, 1, dniCli, (strlen(dniCli)), SQLITE_STATIC);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step1 = sqlite3_step(res1);
+    int step2 = sqlite3_step(res2);
+    int step3 = sqlite3_step(res3);
+
+    int *estados;
+    estados = malloc(3 * sizeof(int));
+
+    if (step1 == SQLITE_ROW && step2 == SQLITE_ROW && step3 == SQLITE_ROW)
+    {
+        printf("ResultadoColumna: %i\n", sqlite3_column_int(res1, 0));
+        *estados = sqlite3_column_int(res1, 0);
+        *(estados + 1) = sqlite3_column_int(res2, 0);
+        *(estados + 2) = sqlite3_column_int(res3, 0);
+    }
+
+    return estados;
+    free(estados);
 }

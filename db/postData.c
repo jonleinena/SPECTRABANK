@@ -86,7 +86,6 @@ int modificarPrestamoADenegado(int *idPrestamo)
 
         sqlite3_bind_int(res, 1, 3);
         sqlite3_bind_int(res, 2, *idPrestamo);
-
     }
     else
     {
@@ -97,4 +96,30 @@ int modificarPrestamoADenegado(int *idPrestamo)
     sqlite3_finalize(res);
 
     return step;
+}
+
+void actualizarPrestamo(int *idPrestamo, float *tae)
+{
+    int rc;
+    char *err_msg = 0;
+    sqlite3_stmt *res;
+
+    char *sql = "UPDATE PRESTAMO SET TAE = ? , ESTADO = 2 WHERE ID_PREST = ?";
+
+    //printf("%s\n", sql);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+    if (rc == SQLITE_OK)
+    {
+
+        sqlite3_bind_double(res, 1, *tae);
+        sqlite3_bind_int(res, 2, *idPrestamo);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    int step = sqlite3_step(res);
+    sqlite3_finalize(res);
 }

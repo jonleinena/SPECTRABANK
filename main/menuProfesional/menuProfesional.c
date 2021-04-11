@@ -8,6 +8,7 @@
 #include "../../utils/colors.h"
 #include "../../utils/structures.h"
 #include "../../utils/fechas.h"
+#include "../../utils/prestamo/prestamo.h"
 
 void menuProfesional(Profesional *prof)
 {
@@ -206,8 +207,8 @@ void mostrarCuentas(Cliente *cli)
         {
         case '1':
             printf("INTRODUZCA EL INDICE DE LA CUENTA\n");
-            fgets(index, 4, stdin);
-            sscanf(index, "%i", index);
+            fgets(input, 4, stdin);
+            sscanf(input, "%i", index);
             fflush(stdin);
             if (*index < 0 || *index > numFilas)
             {
@@ -324,10 +325,10 @@ void verSolicitudesPrestamo(Profesional *prof)
     listaPrestamosPendientes = realloc(listaPrestamosPendientes, numFilas * sizeof(Prestamo));
 
     printf("\n************ TIENES %i SOLICITUDES PENDIENTES **************\n", numFilas);
-    printf("%-10s%-15s%-14s%-25s\n", "ID", "CLIENTE", "IMPORTE", "FECHA SOLICITUD");
+    printf("%-5s%-15s%-14s%-25s\n", "ID", "CLIENTE", "IMPORTE", "FECHA SOLICITUD");
     for (int i = 0; i < numFilas; i++)
     {
-        printf("%-10i%-15s%-14.2f%-25s\n", (listaPrestamosPendientes + i)->idPres, (listaPrestamosPendientes + i)->cli->user->dni, (listaPrestamosPendientes + i)->importe, (listaPrestamosPendientes + i)->fechaSoli);
+        printf("%-5i%-15s%-14.2f%-25s\n", i, (listaPrestamosPendientes + i)->cli->user->dni, (listaPrestamosPendientes + i)->importe, (listaPrestamosPendientes + i)->fechaSoli);
     }
 
     do
@@ -341,11 +342,13 @@ void verSolicitudesPrestamo(Profesional *prof)
         switch (*input)
         {
         case '1':
-            printf("Introduzca el ID de la solicitud: \n");
+            printf("Introduzca el ID de la solicitud a procesar: \n");
             fgets(input, 2, stdin);
             sscanf(input, "%i", index);
             fflush(stdin);
-
+            (listaPrestamosPendientes + *index)->tae = calcularInteres((listaPrestamosPendientes + *index));
+            printf("LA TAE DEL PRESTAMO ES: %f", (listaPrestamosPendientes + *index)->tae);
+            //Actualizar prestamo con su TAE calculada y estado 2 (Aceptado)
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n" FCYAN);
