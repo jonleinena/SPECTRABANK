@@ -400,6 +400,8 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
     while (step == SQLITE_ROW)
     {
         (listaPrestamosPendientes + i)->idPres = sqlite3_column_int(res, 0);
+        (listaPrestamosPendientes + i)->cli = malloc(sizeof(Cliente));
+        (listaPrestamosPendientes + i)->cli->user = malloc(sizeof(Usuario));
         strcpy((listaPrestamosPendientes + i)->cli->user->dni, sqlite3_column_text(res, 1));
         (listaPrestamosPendientes + i)->importe = sqlite3_column_double(res, 3);
         strcpy((listaPrestamosPendientes + i)->fechaSoli, sqlite3_column_text(res, 4));
@@ -409,4 +411,5 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
 
     return listaPrestamosPendientes;
     free(listaPrestamosPendientes);
+
 }

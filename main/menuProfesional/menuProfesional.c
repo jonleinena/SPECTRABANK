@@ -7,6 +7,7 @@
 #include "../../lib/sqlite3/sqlite3.h"
 #include "../../utils/colors.h"
 #include "../../utils/structures.h"
+#include "../../utils/fechas.h"
 
 void menuProfesional(Profesional *prof)
 {
@@ -37,7 +38,7 @@ void menuProfesional(Profesional *prof)
         {
         case '1':
             lista = getListaClientes((prof->idProfesional));
-            realloc(lista, numFilas * sizeof(Cliente *));
+            lista = realloc(lista, numFilas * sizeof(Cliente *));
             printf("\e[1;1H\e[2J");
             imprimirListaClientes(lista);
             printf("\n");
@@ -184,7 +185,7 @@ void mostrarCuentas(Cliente *cli)
     Cuenta *listaCuentas;
     listaCuentas = malloc(30 * sizeof(Cuenta));
     listaCuentas = getCuentasCliente(cli->user->dni);
-    realloc(listaCuentas, numFilas * sizeof(Cuenta)); // resize the memory block pointed to by listaCuentas
+    listaCuentas = realloc(listaCuentas, numFilas * sizeof(Cuenta)); // resize the memory block pointed to by listaCuentas
 
     printf("\n************ CUENTAS DE %s**************\n", (cli->user->nombreApellidos));
     printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
@@ -243,7 +244,7 @@ void mostrarInversiones(Cliente *cli)
         Inversion *listaInversiones;
         listaInversiones = malloc(30 * sizeof(Inversion));
         listaInversiones = getInversionClite(cli->user->dni);
-        realloc(listaInversiones, numFilas * sizeof(Inversion));
+        listaInversiones = realloc(listaInversiones, numFilas * sizeof(Inversion));
 
         printf("\n************ INVERSIONES DE %s**************\n", (cli->user->nombreApellidos));
         printf("%-10s%-10s%-20s%-25s%-10s\n", "COMPANIA", "CANTIDAD", "VALOR DE COMPRA", "FECHA DE COMPRA", "POSICION TOTAL");
@@ -275,7 +276,7 @@ void mostrarPrestamos(Cliente *cli)
         Prestamo *listaPrestamos;
         listaPrestamos = (Prestamo *)malloc(15 * sizeof(Prestamo));
         listaPrestamos = getPrestamos(cli->user->dni);
-        realloc(listaPrestamos, numFilas * sizeof(Prestamo));
+        listaPrestamos = realloc(listaPrestamos, numFilas * sizeof(Prestamo));
 
         printf("\n************ PRESTAMOS DE %s**************\n", (cli->user->nombreApellidos));
         printf("%-10s%-10s%-25s%-25s%-25s%-5s\n", "ID", "IMPORTE", "FECHA EMISION", "FECHA DEVOLUCION", "FECHA COMPLETADO", "TAE");
@@ -300,7 +301,7 @@ void verMovimientos(Cuenta *cue)
     Movimiento *movimientos;
     movimientos = (Movimiento *)malloc(40 * sizeof(Movimiento));
     movimientos = getMovimientos(cue);
-    realloc(movimientos, numFilas * sizeof(Movimiento));
+    movimientos = realloc(movimientos, numFilas * sizeof(Movimiento));
 
     printf("\n************ MOVIMIENTOS CUENTA %s**************\n", cue->iban);
     printf("%-10s%-30s%-30s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
@@ -320,7 +321,7 @@ void verSolicitudesPrestamo(Profesional *prof)
     Prestamo *listaPrestamosPendientes;
     listaPrestamosPendientes = (Prestamo *)malloc(40 * sizeof(Prestamo));
     listaPrestamosPendientes = getSolicitudesPrestamo(prof);
-    realloc(listaPrestamosPendientes, numFilas * sizeof(Prestamo));
+    listaPrestamosPendientes = realloc(listaPrestamosPendientes, numFilas * sizeof(Prestamo));
 
     printf("\n************ TIENES %i SOLICITUDES PENDIENTES **************\n", numFilas);
     printf("%-10s%-15s%-14s%-25s\n", "ID", "CLIENTE", "IMPORTE", "FECHA SOLICITUD");
@@ -348,6 +349,12 @@ void verSolicitudesPrestamo(Profesional *prof)
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n" FCYAN);
+            for (int i = 0; i < numFilas; i++)
+            {
+                free((listaPrestamosPendientes + i)->cli);
+                free((listaPrestamosPendientes + i)->cli->user);
+            }
+            free(listaPrestamosPendientes);
             break;
         default:
             printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
@@ -355,6 +362,8 @@ void verSolicitudesPrestamo(Profesional *prof)
         }
 
     } while (*input != 'q');
+    free(input);
+    free(index);
 }
 
 void verDatosProfesional(Profesional *prof)
