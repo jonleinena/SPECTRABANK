@@ -3,10 +3,9 @@
 #ifndef MENU_CLIENTE_H
 #define MENU_CLIENTE_H
 
-using namespace containers
+using namespace containers;
 
-    void
-    menuCliente(Cliente &cli);
+void menuCliente(Cliente &cli);
 void mostrarCuentas(Cliente &cli);
 
 #endif

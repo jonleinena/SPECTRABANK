@@ -1,12 +1,18 @@
 #include <stdlib.h>
 #include <iostream>
 #include "menuCliente.h"
+#include "../inversiones/inversiones.h"
+#include "../../utils/db/dbConnection.h"
 
 using namespace std;
 using namespace containers;
 
 void menuCliente(ClienteCpp &cli)
 {
+    /* if (startConn())
+    {
+        return 0;
+    } */
     char *input;
     input = new char;
 
@@ -17,7 +23,7 @@ void menuCliente(ClienteCpp &cli)
         cout << (FGREN "**********************Bienvenido, %s**********************", cli.getNombre()) << endl;
         cout << (FCYAN
                  "1.- Ver listado de cuentas\n"
-                 "2.- Solicitudes de prestamo\n"
+                 "2.- Gestionar inversiones\n"
                  "3.- Ver datos de mi cuenta\n"
                  "q.- Cerrar\n\n"
                  "Inserte seleccion: ");
@@ -32,7 +38,9 @@ void menuCliente(ClienteCpp &cli)
             cout << endl;
             break;
         case '2':
-            verSolicitudesPrestamo(prof);
+            cout << ("\e[1;1H\e[2J") << endl;
+            menuInversiones(&cli);
+            cout << endl;
             break;
         case '3':
             verDatosProfesional(prof);
@@ -67,7 +75,7 @@ void mostrarCuentas(Cliente &cli)
     listaCuentas = getCuentasCliente((cli.getDni).c_str());
     listaCuentas = realloc(listaCuentas, numFilas * sizeof(containers::Cuenta)); // resize the memory block pointed to by listaCuentas
 
-    printf("\n************ CUENTAS DE %s**************\n", (cli.getNombre));
+    printf("\n************ CUENTAS DE %s**************\n", cli.getNombre()); //Transformar Cli a Clase
     printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
     for (int i = 0; i < numFilas; i++)
     {

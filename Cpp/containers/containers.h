@@ -1,6 +1,6 @@
-#include "../../C/utils/structures.h"
 #include <string>
 #include <iostream>
+#include "../../C/utils/structures.h"
 
 #ifndef CONTAINERS
 #define CONTAINERS
@@ -19,9 +19,9 @@ namespace containers
         unsigned int telf;
 
     public:
-        ClienteCpp(stringdni, string nombre, string domicilio, string fecNac, string email, unsigned int telf);
+        ClienteCpp(string dni, string nombre, string domicilio, string fecNac, string email, unsigned int telf);
         ClienteCpp(Cliente cli);
-        ~Cliente();
+        ~ClienteCpp();
         string getDni() const;
         string getNombre() const;
         string getDomicilio() const;
@@ -31,6 +31,33 @@ namespace containers
         void setEmail(string email);
         unsigned int getTelf() const;
         void setTelf(unsigned int telf);
+    };
+
+    class Movimiento
+    {
+    private:
+        unsigned int idMovimiento;
+        string ibanOrigen;
+        string ibanDestino;
+        float importe;
+        string fecha;
+        string concepto;
+
+    public:
+        Movimiento(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto);
+        ~Movimiento();
+        void setIdMovimiento(unsigned int idMovimiento);
+        unsigned int getIdMovimiento() const;
+        void setIbanOrigen(string ibanOrigen);
+        string getIbanOrigen() const;
+        void setIbanDestino(string ibanDestino);
+        string getIbanDestino() const;
+        void setImporte(float importe);
+        float getImporte() const;
+        void setFecha(string fecha);
+        string getFecha() const;
+        void setConcepto(string concepto);
+        string getConcepto() const;
     };
 
     class Cuenta
@@ -51,34 +78,38 @@ namespace containers
         void setSaldo(float saldo);
         string getFecCreacion() const;
         Movimiento *getMovimientos() const;
-        void setMovimientos(Movimiento mov);
+        void setMovimientos(Movimiento *mov);
     };
 
-    class Movimiento
+    class Inversion
     {
     private:
-        unsigned int idMovimiento;
-        string ibanOrigen;
-        string ibanDestino;
-        float importe;
-        string fecha;
-        string concepto;
+        const char *idCompania;
+        const float valorCompra;
+        const int cantidad;
+        const char *fechaCompra;
 
     public:
-        Movimiento(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto);
-        ~Movimiento();
-        void setMovimiento(unsigned int idMovimiento);
-        unsigned int getIdMovimiento() const;
-        void setIbanOrigen(string ibanOrigen);
-        string getIbanOrigen() const;
-        void setIbanDestino(string ibanDestino);
-        string getIbanDestino() const;
-        void setImporte(float importe);
-        float getImporte() const;
-        void setFecha(string fecha);
-        string getFecha() const;
-        void setConcepto(string concepto);
-        string getConcepto() const;
+        Inversion(const char *idCompania, float valorCompra, int cantidad, const char *fechaCompra);
+        ~Inversion();
+        const char *getIdCompania() const;
+        const float getValorCompra() const;
+        const int getCantidad() const;
+        const char *getFechaCompra() const;
+    };
+
+    class Inversiones
+    {
+    private:
+        int count;
+        Inversion *inversiones;
+
+    public:
+        Inversiones(int count);
+        ~Inversiones();
+        Inversion *getInversiones() const;
+        void setInversion(int index, Inversion *inversion);
+        int getCount() const;
     };
 
 };
