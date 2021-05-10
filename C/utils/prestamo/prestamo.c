@@ -4,7 +4,7 @@
 #include "prestamo.h"
 #include "../../db/getData.h"
 #include "../../db/postData.h"
-#include "../../lib/sqlite3/sqlite3.h"
+#include "../../../lib/sqlite3/sqlite3.h"
 #include "../../db/dbConnection.h"
 #include "../colors.h"
 #include "../structures.h"
@@ -35,7 +35,6 @@ float calcularInteres(Prestamo *pres)
 
     for (int i = 0; i < numeroInversiones; i++)
     {
-
         patrimonioClte = patrimonioClte + ((inversiones + i)->cantidad * (inversiones + i)->valorCompra);
     }
     for (int j = 0; j < numeroCuentas; j++)

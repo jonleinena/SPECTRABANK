@@ -3,7 +3,7 @@
 #include <string.h>
 #include "postData.h"
 #include "dbConnection.h"
-#include "../lib/sqlite3/sqlite3.h"
+#include "../../lib/sqlite3/sqlite3.h"
 #include "../utils/structures.h"
 int modificarProfesional(char *selec, Profesional *prof, char *input)
 {

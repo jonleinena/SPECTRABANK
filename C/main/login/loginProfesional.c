@@ -4,7 +4,7 @@
 #include "loginProfesional.h"
 #include "../../db/getData.h"
 #include "../../db/postData.h"
-#include "../../lib/sqlite3/sqlite3.h"
+#include "../../../lib/sqlite3/sqlite3.h"
 #include "../../utils/colors.h"
 #include "../menuProfesional/menuProfesional.h"
 
@@ -47,7 +47,7 @@ void loginProfesional(void)
             menuProfesional(prof);
         }
         else
-            printf(FRED"Error en el inicio de sesion\n"FCYAN);
+            printf(FRED "Error en el inicio de sesion\n" FCYAN);
     } while (resultLogin != 0);
 
     free(email);

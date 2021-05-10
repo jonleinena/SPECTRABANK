@@ -3,7 +3,7 @@
 #include <string.h>
 #include "getData.h"
 #include "dbConnection.h"
-#include "../lib/sqlite3/sqlite3.h"
+#include "../../lib/sqlite3/sqlite3.h"
 #include "../utils/structures.h"
 
 int numFilas = 1;
@@ -82,7 +82,6 @@ Profesional *getInfoProfesional(char *email)
 }
 
 //ESTE METODO SE USA PARA ALGO??
-
 Cliente *getInfoCliente(char *email)
 {
     int rc;
