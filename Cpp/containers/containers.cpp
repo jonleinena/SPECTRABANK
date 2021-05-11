@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "../../C/utils/structures.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -169,7 +170,21 @@ string containers::Movimiento::getConcepto() const
 }
 
 //Inversion
-containers::Inversion::Inversion(const char *idCompania, const float valorCompra, const int cantidad, const char *fechaCompra)
+containers::Inversion::Inversion()
+{
+    this->idCompania = NULL;
+    this->valorCompra = 0;
+    this->cantidad = 0;
+    this->fechaCompra = NULL;
+}
+containers::Inversion::Inversion(const containers::Inversion &o)
+{
+    this->idCompania = o.getIdCompania();
+    this->valorCompra = o.getValorCompra();
+    this->cantidad = o.getCantidad();
+    this->fechaCompra = o.getFechaCompra();
+}
+containers::Inversion::Inversion(char *idCompania, float valorCompra, int cantidad, char *fechaCompra)
 {
     this->idCompania = idCompania;
     this->valorCompra = valorCompra;
@@ -181,19 +196,19 @@ containers::Inversion::~Inversion()
     delete idCompania;
     delete fechaCompra;
 }
-const char *containers::Inversion::getIdCompania() const
+char *containers::Inversion::getIdCompania() const
 {
     return this->idCompania;
 }
-const float containers::Inversion::getValorCompra() const
+float containers::Inversion::getValorCompra() const
 {
     return this->valorCompra;
 }
-const int containers::Inversion::getCantidad() const
+int containers::Inversion::getCantidad() const
 {
     return this->cantidad;
 }
-const char *containers::Inversion::getFechaCompra() const
+char *containers::Inversion::getFechaCompra() const
 {
     return this->fechaCompra;
 }
@@ -208,16 +223,17 @@ containers::Inversiones::~Inversiones()
 {
     for (int i = 0; i < this->count; i++)
     {
-        delete this->inversiones[i];
+        delete (this->inversiones + i);
     }
 }
-Inversion *containers::Inversiones::getInversiones() const
+
+containers::Inversion *containers::Inversiones::getInversiones() const
 {
-    return this->inversiones;
+    return inversiones;
 }
-void containers::Inversiones::setInversion(int index, Inversion *inversion)
+void containers::Inversiones::setInversion(unsigned int index, containers::Inversion *inversion)
 {
-    this->inversiones[index] = inversion;
+    this->inversiones[index] = *inversion;
 }
 int containers::Inversiones::getCount() const
 {

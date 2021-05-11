@@ -11,16 +11,16 @@ namespace containers
     class ClienteCpp
     {
     private:
-        const string dni;
-        const string nombre;
+        string dni;
+        string nombre;
         string domicilio;
         string email;
-        const string fecNac;
+        string fecNac;
         unsigned int telf;
 
     public:
         ClienteCpp(string dni, string nombre, string domicilio, string fecNac, string email, unsigned int telf);
-        ClienteCpp(Cliente cli);
+        ClienteCpp(Cliente *cli);
         ~ClienteCpp();
         string getDni() const;
         string getNombre() const;
@@ -63,10 +63,10 @@ namespace containers
     class Cuenta
     {
     private:
-        const string dniPropietario;
-        const string iban;
+        string dniPropietario;
+        string iban;
         float saldo;
-        const string fecCreacion;
+        string fecCreacion;
         Movimiento *movimientos;
 
     public:
@@ -84,18 +84,20 @@ namespace containers
     class Inversion
     {
     private:
-        const char *idCompania;
-        const float valorCompra;
-        const int cantidad;
-        const char *fechaCompra;
+        char *idCompania;
+        float valorCompra;
+        int cantidad;
+        char *fechaCompra;
 
     public:
-        Inversion(const char *idCompania, float valorCompra, int cantidad, const char *fechaCompra);
+        Inversion();
+        Inversion(const Inversion &o);
+        Inversion(char *idCompania, float valorCompra, int cantidad, char *fechaCompra);
         ~Inversion();
-        const char *getIdCompania() const;
-        const float getValorCompra() const;
-        const int getCantidad() const;
-        const char *getFechaCompra() const;
+        char *getIdCompania() const;
+        float getValorCompra() const;
+        int getCantidad() const;
+        char *getFechaCompra() const;
     };
 
     class Inversiones
@@ -108,7 +110,7 @@ namespace containers
         Inversiones(int count);
         ~Inversiones();
         Inversion *getInversiones() const;
-        void setInversion(int index, Inversion *inversion);
+        void setInversion(unsigned int index, Inversion *inversion);
         int getCount() const;
     };
 
