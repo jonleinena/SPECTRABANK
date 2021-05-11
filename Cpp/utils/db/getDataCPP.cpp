@@ -2,8 +2,7 @@
 #include <string.h>
 #include <string>
 #include "../../../lib/sqlite3/sqlite3.h"
-#include "dbConnection.h"
-#include "../../containers/containers.h"
+#include "../../../C/db/dbConnection.h"
 
 using namespace std;
 

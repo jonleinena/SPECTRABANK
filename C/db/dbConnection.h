@@ -4,6 +4,6 @@
 
 extern sqlite3 *db;
 
-int startConn(sqlite3 *db);
+int startConn();
 
 #endif

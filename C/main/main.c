@@ -9,7 +9,7 @@
 
 int main(void)
 {
-    if (startConn(db))
+    if (startConn() == 0)
     {
         return 0;
     }

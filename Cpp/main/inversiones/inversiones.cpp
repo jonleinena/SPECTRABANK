@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include "inversiones.h"
 #include "../../containers/containers.h"
-#include "../../utils/db/dbConnection.h"
 #include "../../utils/db/getDataCPP.h"
 #include "../../../C/utils/structures.h"
 #include "../../../C/utils/colors.h"
+#include "../../../C/db/dbConnection.h"
 
 using namespace stockAPI;
 using namespace std;
@@ -97,15 +97,18 @@ void comprarAcciones(ClienteCpp &cli)
         }
 
         int j;
-        do {
+        do
+        {
             cout << "Elige un Stock (introduzca su índice). Introduzca 0 cancelar la operacion: ";
             cin >> j;
-        } while(0 > j || j > s.getCount());
-        
-            
-        if(j == 0) {
+        } while (0 > j || j > s.getCount());
+
+        if (j == 0)
+        {
             cout << "Cancelando operacion..." << endl;
-        } else {
+        }
+        else
+        {
             //Falta proceso de compra
             cout << "La cotización actual de " << (*(searchResults + j - 1))->getSymbol() << " es " << (*(searchResults + j - 1))->getCurrentValue() << endl;
         }
@@ -114,4 +117,5 @@ void comprarAcciones(ClienteCpp &cli)
 
 void venderAcciones(ClienteCpp &cli)
 {
+    //Falta proceso de venta
 }

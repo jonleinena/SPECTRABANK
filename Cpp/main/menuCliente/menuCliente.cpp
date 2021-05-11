@@ -2,14 +2,14 @@
 #include <iostream>
 #include "menuCliente.h"
 #include "../inversiones/inversiones.h"
-#include "../../utils/db/dbConnection.h"
+#include "../../../C/db/dbConnection.h"
 
 using namespace std;
 using namespace containers;
 
 void menuCliente(ClienteCpp &cli)
 {
-    /* if (startConn())
+    /* if (startConn() == 0)
     {
         return 0;
     } */
