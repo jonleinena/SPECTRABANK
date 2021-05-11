@@ -91,7 +91,6 @@ Search::~Search()
 }
 void Search::performSearch()
 {
-
     CURL *curl = curl_easy_init();
     if (curl)
     {

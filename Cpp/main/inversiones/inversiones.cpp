@@ -14,11 +14,12 @@ using namespace containers;
 
 int main(void)
 {
-    if (startConn())
+    if (startConn() == 0)
     {
         return 0;
     }
     ClienteCpp cli("1", "CLIENTE 1", "A", "2021/04/08", "CLIENTE1", 0);
+    cout << "hola" << endl;
     menuInversiones(cli);
     return 0;
 }
@@ -75,22 +76,40 @@ void verInversiones(ClienteCpp &cli)
 
 void comprarAcciones(ClienteCpp &cli)
 {
-    char *query;
     cout << "***************COMPRAR ACCIONES***************" << endl;
     cout << "Busque un stock: ";
-    cin >> query;
-    Search s(query);
+    char *queryString = new char;
+    cin >> queryString;
+    cout << "Buscando..." << endl;
+    Search s(queryString);
     Symbol **searchResults = s.getResults();
-    printf("%-5s%-15s%-20s%-30s%-15s\n", "", "SYMBOL", "DISPLAY SYMBOL", "DESCRIPTION", "TYPE");
-    for (int i = 0; i < s.getCount(); i++)
+    delete queryString;
+    if (s.getCount() == 0)
     {
-        printf("%-5d%-15s%-20s%-30s%-15s\n", i + 1, (*(searchResults + i))->getSymbol(), (*(searchResults + i))->getDisplaySymbol(), (*(searchResults + i))->getDescription(), (*(searchResults + i))->getType());
+        cout << "Sin resultados" << endl;
     }
+    else
+    {
+        printf("%-5s%-15s%-20s%-30s%-15s\n", "", "SYMBOL", "DISPLAY SYMBOL", "DESCRIPTION", "TYPE");
+        for (int i = 0; i < s.getCount(); i++)
+        {
+            printf("%-5d%-15s%-20s%-30s%-15s\n", i + 1, (*(searchResults + i))->getSymbol(), (*(searchResults + i))->getDisplaySymbol(), (*(searchResults + i))->getDescription(), (*(searchResults + i))->getType());
+        }
 
-    int j;
-    cout << "Elige un Stock (introduzca su índice): ";
-    cin >> j;
-    cout << "La cotización actual de " << (*(searchResults + j - 1))->getSymbol() << " es " << (*(searchResults + j - 1))->getCurrentValue() << endl;
+        int j;
+        do {
+            cout << "Elige un Stock (introduzca su índice). Introduzca 0 cancelar la operacion: ";
+            cin >> j;
+        } while(0 > j || j > s.getCount());
+        
+            
+        if(j == 0) {
+            cout << "Cancelando operacion..." << endl;
+        } else {
+            //Falta proceso de compra
+            cout << "La cotización actual de " << (*(searchResults + j - 1))->getSymbol() << " es " << (*(searchResults + j - 1))->getCurrentValue() << endl;
+        }
+    }
 }
 
 void venderAcciones(ClienteCpp &cli)

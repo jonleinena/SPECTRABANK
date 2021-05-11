@@ -31,7 +31,7 @@ containers::Inversiones *getInversiones(string dni)
     int i = 0;
     while ((step = sqlite3_step(res)) == SQLITE_ROW)
     {
-        inversiones->setInversion(i, new containers::Inversion((char *)sqlite3_column_text(res, 1), sqlite3_column_double(res, 2), sqlite3_column_double(res, 3), (char *)sqlite3_column_text(res, 4)));
+        inversiones->setInversion(i, new containers::Inversion(strdup((const char *)sqlite3_column_text(res, 1)), sqlite3_column_double(res, 2), sqlite3_column_double(res, 3), strdup((const char *)sqlite3_column_text(res, 4))));
         i++;
     }
 
