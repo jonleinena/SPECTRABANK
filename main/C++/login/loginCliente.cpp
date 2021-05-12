@@ -7,7 +7,7 @@
 #include "../../../utils/colors.h"
 #include "../../../db/dbConnection.h"
 #include "../../../db/C/getData.h"
-#include "../../C/utils/structures.h
+#include "../../C/utils/structures.h"
 #include "../menuCliente/menuCliente.h"
 
 using namespace std;
@@ -46,13 +46,13 @@ void loginCliente(void)
 
         if (resultLogin == 0)
         {
-            cout << "%sINICIO DE SESION CORRECTO", FGREN) << endl;
+            cout << "INICIO DE SESION CORRECTO" << FGREN << endl;
             cout << "\e[1;1H\e[2J" << endl;
             ClienteCpp c(getInfoCliente(email));
             menuCliente(c);
         }
         else
-            cout << FRED "Error en el inicio de sesion" FCYAN) << endl;
+            cout << FRED << "Error en el inicio de sesion" << FCYAN << endl;
     } while (resultLogin != 0);
 
     delete[] email;

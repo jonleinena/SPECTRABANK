@@ -6,6 +6,7 @@
 #include "../db/C/postData.h"
 #include "../db/dbConnection.h"
 #include "../utils/colors.h"
+#include "c++/login/loginCliente.h"
 
 int main(void)
 {
@@ -98,7 +99,7 @@ int main(void)
             loginProfesional();
             break;
         case '2':
-            //Por terminar
+            loginCliente();
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");
