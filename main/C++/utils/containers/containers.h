@@ -60,7 +60,7 @@ namespace containers
         string getConcepto() const;
     };
 
-    class Cuenta
+    class CuentaCpp
     {
     private:
         string dniPropietario;
@@ -70,8 +70,9 @@ namespace containers
         Movimiento *movimientos;
 
     public:
-        Cuenta(string dniPropietario, string iban, float saldo, string fecCreacion, Movimiento *movimientos);
-        ~Cuenta();
+        CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, Movimiento *movimientos);
+        CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion); //constructor sin movimientos, para cuando se leen solo las CuentaCpps
+        ~CuentaCpp();
         string getDni() const;
         string getIban() const;
         float getSaldo() const;

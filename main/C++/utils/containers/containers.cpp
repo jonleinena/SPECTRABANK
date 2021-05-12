@@ -65,8 +65,8 @@ void containers::ClienteCpp::setTelf(unsigned int telf)
     this->telf = telf;
 }
 
-//Cuenta
-containers::Cuenta::Cuenta(string dniPropietario, string iban, float saldo, string fecCreacion, Movimiento *movimientos)
+//CuentaCpp
+containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, Movimiento *movimientos)
 {
     this->dniPropietario = dniPropietario;
     this->iban = iban;
@@ -74,35 +74,42 @@ containers::Cuenta::Cuenta(string dniPropietario, string iban, float saldo, stri
     this->fecCreacion = fecCreacion;
     this->movimientos = movimientos;
 }
-containers::Cuenta::~Cuenta()
+containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion)
+{
+    this->dniPropietario = dniPropietario;
+    this->iban = iban;
+    this->saldo = saldo;
+    this->fecCreacion = fecCreacion;
+}
+containers::CuentaCpp::~CuentaCpp()
 {
     delete[] movimientos;
 }
-string containers::Cuenta::getDni() const
+string containers::CuentaCpp::getDni() const
 {
     return this->dniPropietario;
 }
-string containers::Cuenta::getIban() const
+string containers::CuentaCpp::getIban() const
 {
     return this->iban;
 }
-float containers::Cuenta::getSaldo() const
+float containers::CuentaCpp::getSaldo() const
 {
     return this->saldo;
 }
-void containers::Cuenta::setSaldo(float saldo)
+void containers::CuentaCpp::setSaldo(float saldo)
 {
     this->saldo = saldo;
 }
-string containers::Cuenta::getFecCreacion() const
+string containers::CuentaCpp::getFecCreacion() const
 {
     return this->fecCreacion;
 }
-containers::Movimiento *containers::Cuenta::getMovimientos() const
+containers::Movimiento *containers::CuentaCpp::getMovimientos() const
 {
     return this->movimientos;
 }
-void containers::Cuenta::setMovimientos(containers::Movimiento *mov)
+void containers::CuentaCpp::setMovimientos(containers::Movimiento *mov)
 {
     this->movimientos = mov;
 }

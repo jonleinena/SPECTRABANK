@@ -5,6 +5,10 @@
 #include "loginCliente.h"
 #include "../utils/containers/containers.h"
 #include "../../../utils/colors.h"
+#include "../../../db/dbConnection.h"
+#include "../../../db/C/getData.h"
+#include "../../C/utils/structures.h
+#include "../menuCliente/menuCliente.h"
 
 using namespace std;
 using namespace containers;
@@ -14,9 +18,9 @@ void loginCliente(void)
 
     int resultLogin = 0;
     char *email;
-    email = malloc(30 * sizeof(char));
+    email = (char *)malloc(30 * sizeof(char));
     char *contrasenya;
-    contrasenya = malloc(18 * sizeof(char));
+    contrasenya = (char *)malloc(18 * sizeof(char));
 
     cout << "**********************Bienvenido**********************" << endl;
     cout << "INICIAR SESION" << endl;
@@ -45,18 +49,12 @@ void loginCliente(void)
             cout << "%sINICIO DE SESION CORRECTO", FGREN) << endl;
             cout << "\e[1;1H\e[2J" << endl;
             ClienteCpp c(getInfoCliente(email));
-            menuCliente(&c);
+            menuCliente(c);
         }
         else
             cout << FRED "Error en el inicio de sesion" FCYAN) << endl;
     } while (resultLogin != 0);
 
-    free(email);
-    email = NULL;
-    free(contrasenya);
-    contrasenya = NULL;
-    free(prof->user);
-    prof->user = NULL;
-    free(prof);
-    prof = NULL;
+    delete[] email;
+    delete[] contrasenya;
 }

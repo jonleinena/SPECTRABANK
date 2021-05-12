@@ -3,7 +3,10 @@
 #include "menuCliente.h"
 #include "../utils/inversiones/inversiones.h"
 #include "../../../db/dbConnection.h"
+#include "../../../db/C/getData.h" //hay que incluirlo para las consultas y para el numFilas
 #include "../../../utils/colors.h"
+#include "../utils/containers/containers.h"
+#include "../../C/utils/structures.h"
 
 using namespace std;
 using namespace containers;
@@ -35,20 +38,21 @@ void menuCliente(ClienteCpp &cli)
         {
         case '1':
             cout << ("\e[1;1H\e[2J") << endl;
-            mostrarCuentas(&cli);
+            mostrarCuentas(cli);
             cout << endl;
             break;
         case '2':
             cout << ("\e[1;1H\e[2J") << endl;
-            menuInversiones(&cli);
+            menuInversiones(cli);
             cout << endl;
             break;
         case '3':
-            verDatosProfesional(prof);
+            // verDatosProfesional(prof);
             break;
         case 'q':
             cout << (FRED "\nSaliendo.\n") << endl;
             //revisar los free/delete
+            /**
             for (int i = 0; i < numFilas; i++)
             {
                 free((*(lista + i))->user);
@@ -56,6 +60,8 @@ void menuCliente(ClienteCpp &cli)
             }
             free(lista);
             free(input);
+            */
+
             break;
         default:
             cout << (FRED "\nIntroduce una opcion valida, por favor.\n") << endl;
@@ -64,19 +70,33 @@ void menuCliente(ClienteCpp &cli)
     } while (*input != 'q');
 }
 
-void mostrarCuentas(Cliente &cli)
+void mostrarCuentas(ClienteCpp &cli)
 {
     char *input;
-    input = malloc(sizeof(char));
+    input = new char;
     int *index;
-    index = malloc(sizeof(int));
+    index = new int;
 
-    containers::Cuenta *listaCuentas;
-    listaCuentas = malloc(30 * sizeof(containers::Cuenta));
-    listaCuentas = getCuentasCliente((cli.getDni).c_str());
-    listaCuentas = realloc(listaCuentas, numFilas * sizeof(containers::Cuenta)); // resize the memory block pointed to by listaCuentas
+    containers::CuentaCpp *listaCuentas;
+    listaCuentas = (CuentaCpp *)malloc(30 * sizeof(CuentaCpp)); //no se usa el new porque este llama al constructor por defecto y malloc no
+    for (int i = 0; i < numFilas; i++)
+    {
+        // el &cli.getDni()[0] es para pasar el puntero de la pos. 0 del dni al metodo. el c_str() davuelve un const char* y da errores
 
-    printf("\n************ CUENTAS DE %s**************\n", cli.getNombre()); //Transformar Cli a Clase
+        char *dni = (getCuentasCliente(&cli.getDni()[0]) + i)->dniPropietario;
+        char *iban = (getCuentasCliente(&cli.getDni()[0]) + i)->iban;
+        float saldo = (getCuentasCliente(&cli.getDni()[0]) + i)->saldo;
+        char *fechaCreacion = (getCuentasCliente(&cli.getDni()[0]) + i)->fechaCreacion;
+
+        //inicializamos el array de listaCuentas con cuentas SIN movimientos porque todavía no tenemos estos
+
+        listaCuentas[i] = CuentaCpp(string(dni), string(iban), saldo, string(fechaCreacion));
+    }
+
+    listaCuentas = (CuentaCpp *)realloc(listaCuentas, numFilas * sizeof(CuentaCpp)); // resize the memory block pointed to by listaCuentas
+
+    cout << "\n************ CUENTAS DE %s**************\n"
+         << cli.getNombre() << endl;
     printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
     for (int i = 0; i < numFilas; i++)
     {
@@ -104,7 +124,7 @@ void mostrarCuentas(Cliente &cli)
             }
             else
             {
-                verMovimientos((listaCuentas + *index));
+                //verMovimientos((listaCuentas + *index));
             }
             break;
         case 'q':

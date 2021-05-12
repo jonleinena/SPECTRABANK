@@ -81,7 +81,6 @@ Profesional *getInfoProfesional(char *email)
     free(prof);
 }
 
-//ESTE METODO SE USA PARA ALGO??
 Cliente *getInfoCliente(char *email)
 {
     int rc;
@@ -176,8 +175,7 @@ Cliente **getListaClientes(char *idProf)
 
     sqlite3_finalize(res);
 
-    return lista;
-    free(lista); //El resto de punteros se liberan desde el menu, accediendo a ellos a traves del puntero que se crea ahi
+    return lista; //El resto de punteros se liberan desde el menu, accediendo a ellos a traves del puntero que se crea ahi
 }
 Cuenta *getCuentasCliente(char *dniCliente)
 {
@@ -222,7 +220,6 @@ Cuenta *getCuentasCliente(char *dniCliente)
     }
 
     return listaCuentas;
-    free(listaCuentas);
 }
 
 Inversion *getInversionClite(char *dniCliente)

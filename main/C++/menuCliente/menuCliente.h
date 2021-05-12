@@ -5,7 +5,7 @@
 
 using namespace containers;
 
-void menuCliente(Cliente &cli);
-void mostrarCuentas(Cliente &cli);
+void menuCliente(ClienteCpp &cli);
+void mostrarCuentas(ClienteCpp &cli);
 
 #endif
