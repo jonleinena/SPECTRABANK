@@ -100,7 +100,7 @@ void mostrarCuentas(ClienteCpp &cli)
     printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
     for (int i = 0; i < numFilas; i++)
     {
-        printf("%-10d%-30s%-15.2f%-25s%-10s\n", i, (listaCuentas + i)->iban, (listaCuentas + i)->saldo, (listaCuentas + i)->fechaCreacion, (listaCuentas + i)->dniPropietario);
+        printf("%-10d%-30s%-15.2f%-25s%-10s\n", i, (listaCuentas + i)->getIban(), (listaCuentas + i)->getSaldo(), (listaCuentas + i)->getFecCreacion(), (listaCuentas + i)->getDni());
     }
 
     do
