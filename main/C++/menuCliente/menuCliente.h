@@ -7,5 +7,6 @@ using namespace containers;
 
 void menuCliente(ClienteCpp &cli);
 void mostrarCuentas(ClienteCpp &cli);
+void verDatosCliente(ClienteCpp &cli);
 
 #endif

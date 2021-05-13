@@ -66,7 +66,7 @@ void containers::ClienteCpp::setTelf(unsigned int telf)
 }
 
 //CuentaCpp
-containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, Movimiento *movimientos)
+containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, MovimientoCpp *movimientos)
 {
     this->dniPropietario = dniPropietario;
     this->iban = iban;
@@ -105,17 +105,17 @@ string containers::CuentaCpp::getFecCreacion() const
 {
     return this->fecCreacion;
 }
-containers::Movimiento *containers::CuentaCpp::getMovimientos() const
+containers::MovimientoCpp *containers::CuentaCpp::getMovimientos() const
 {
     return this->movimientos;
 }
-void containers::CuentaCpp::setMovimientos(containers::Movimiento *mov)
+void containers::CuentaCpp::setMovimientos(containers::MovimientoCpp *mov)
 {
     this->movimientos = mov;
 }
 
 //Movimiento
-containers::Movimiento::Movimiento(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto)
+containers::MovimientoCpp::MovimientoCpp(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto)
 {
     this->idMovimiento = idMovimiento;
     this->ibanOrigen = ibanOrigen;
@@ -124,98 +124,98 @@ containers::Movimiento::Movimiento(unsigned int idMovimiento, string ibanOrigen,
     this->fecha = fecha;
     this->concepto = concepto;
 }
-containers::Movimiento::~Movimiento()
+containers::MovimientoCpp::~MovimientoCpp()
 {
 }
-void containers::Movimiento::setIdMovimiento(unsigned int idMovimiento)
+void containers::MovimientoCpp::setIdMovimiento(unsigned int idMovimiento)
 {
     this->idMovimiento = idMovimiento;
 }
-unsigned int containers::Movimiento::getIdMovimiento() const
+unsigned int containers::MovimientoCpp::getIdMovimiento() const
 {
     return this->idMovimiento;
 }
-void containers::Movimiento::setIbanOrigen(string ibanOrigen)
+void containers::MovimientoCpp::setIbanOrigen(string ibanOrigen)
 {
     this->ibanOrigen = ibanOrigen;
 }
-string containers::Movimiento::getIbanOrigen() const
+string containers::MovimientoCpp::getIbanOrigen() const
 {
     return this->ibanOrigen;
 }
-void containers::Movimiento::setIbanDestino(string ibanDestino)
+void containers::MovimientoCpp::setIbanDestino(string ibanDestino)
 {
     this->ibanDestino = ibanDestino;
 }
-string containers::Movimiento::getIbanDestino() const
+string containers::MovimientoCpp::getIbanDestino() const
 {
     return this->ibanDestino;
 }
-void containers::Movimiento::setImporte(float importe)
+void containers::MovimientoCpp::setImporte(float importe)
 {
     this->importe = importe;
 }
-float containers::Movimiento::getImporte() const
+float containers::MovimientoCpp::getImporte() const
 {
     return this->importe;
 }
-void containers::Movimiento::setFecha(string fecha)
+void containers::MovimientoCpp::setFecha(string fecha)
 {
     this->fecha = fecha;
 }
-string containers::Movimiento::getFecha() const
+string containers::MovimientoCpp::getFecha() const
 {
     return this->fecha;
 }
-void containers::Movimiento::setConcepto(string concepto)
+void containers::MovimientoCpp::setConcepto(string concepto)
 {
     this->concepto = concepto;
 }
-string containers::Movimiento::getConcepto() const
+string containers::MovimientoCpp::getConcepto() const
 {
     return this->concepto;
 }
 
-//Inversion
-containers::Inversion::Inversion()
+//InversionCpp
+containers::InversionCpp::InversionCpp()
 {
     this->idCompania = NULL;
     this->valorCompra = 0;
     this->cantidad = 0;
     this->fechaCompra = NULL;
 }
-containers::Inversion::Inversion(const containers::Inversion &o)
+containers::InversionCpp::InversionCpp(const containers::InversionCpp &o)
 {
     this->idCompania = o.getIdCompania();
     this->valorCompra = o.getValorCompra();
     this->cantidad = o.getCantidad();
     this->fechaCompra = o.getFechaCompra();
 }
-containers::Inversion::Inversion(char *idCompania, float valorCompra, int cantidad, char *fechaCompra)
+containers::InversionCpp::InversionCpp(char *idCompania, float valorCompra, int cantidad, char *fechaCompra)
 {
     this->idCompania = idCompania;
     this->valorCompra = valorCompra;
     this->cantidad = cantidad;
     this->fechaCompra = fechaCompra;
 }
-containers::Inversion::~Inversion()
+containers::InversionCpp::~InversionCpp()
 {
     delete idCompania;
     delete fechaCompra;
 }
-char *containers::Inversion::getIdCompania() const
+char *containers::InversionCpp::getIdCompania() const
 {
     return this->idCompania;
 }
-float containers::Inversion::getValorCompra() const
+float containers::InversionCpp::getValorCompra() const
 {
     return this->valorCompra;
 }
-int containers::Inversion::getCantidad() const
+int containers::InversionCpp::getCantidad() const
 {
     return this->cantidad;
 }
-char *containers::Inversion::getFechaCompra() const
+char *containers::InversionCpp::getFechaCompra() const
 {
     return this->fechaCompra;
 }
@@ -224,7 +224,7 @@ char *containers::Inversion::getFechaCompra() const
 containers::Inversiones::Inversiones(int count)
 {
     this->count = count;
-    this->inversiones = new containers::Inversion[this->count];
+    this->inversiones = new containers::InversionCpp[this->count];
 }
 containers::Inversiones::~Inversiones()
 {
@@ -234,13 +234,13 @@ containers::Inversiones::~Inversiones()
     }
 }
 
-containers::Inversion *containers::Inversiones::getInversiones() const
+containers::InversionCpp *containers::Inversiones::getInversiones() const
 {
     return inversiones;
 }
-void containers::Inversiones::setInversion(unsigned int index, containers::Inversion *inversion)
+void containers::Inversiones::setInversionCpp(unsigned int index, containers::InversionCpp *InversionCpp)
 {
-    this->inversiones[index] = *inversion;
+    this->inversiones[index] = *InversionCpp;
 }
 int containers::Inversiones::getCount() const
 {

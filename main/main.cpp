@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+extern "C"
+{
 #include "C/login/loginProfesional.h"
 #include "../db/C/getData.h"
 #include "../db/C/postData.h"
 #include "../db/dbConnection.h"
 #include "../utils/colors.h"
-#include "c++/login/loginCliente.h"
+}
+#include "C++/login/loginCliente.h"
 
 int main(void)
 {
@@ -17,7 +20,7 @@ int main(void)
 
     printf("\e[1;1H\e[2J"); //Esta limpieza se ejecuta para el buen funcionamiento de la apariencia de la consola
     char *input;
-    input = malloc(sizeof(char));
+    input = new char;
 
     printf(FWHITE RESET
            "\t\t                                               ``                                                \n"

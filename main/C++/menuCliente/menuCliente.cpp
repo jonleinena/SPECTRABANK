@@ -2,11 +2,16 @@
 #include <iostream>
 #include "menuCliente.h"
 #include "../utils/inversiones/inversiones.h"
-#include "../../../db/dbConnection.h"
-#include "../../../db/C/getData.h" //hay que incluirlo para las consultas y para el numFilas
+
+extern "C"
+{
+#include "../../../lib/sqlite3/sqlite3.h"
 #include "../../../utils/colors.h"
-#include "../utils/containers/containers.h"
+#include "../../../db/dbConnection.h"
+#include "../../../db/C/getData.h"
 #include "../../C/utils/structures.h"
+}
+#include "../utils/containers/containers.h"
 
 using namespace std;
 using namespace containers;
@@ -43,11 +48,11 @@ void menuCliente(ClienteCpp &cli)
             break;
         case '2':
             cout << ("\e[1;1H\e[2J") << endl;
-            menuInversiones(cli);
+            // menuInversiones(cli);
             cout << endl;
             break;
         case '3':
-            // verDatosProfesional(prof);
+            verDatosCliente(cli);
             break;
         case 'q':
             cout << (FRED "\nSaliendo.\n") << endl;
@@ -139,4 +144,33 @@ void mostrarCuentas(ClienteCpp &cli)
 
     free(input);
     free(index);
+}
+
+void verDatosCliente(ClienteCpp &cli)
+{
+    printf("\e[1;1H\e[2J");
+    char *input = new char;
+
+    do
+    {
+        printf(FCYAN "%-15s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
+        printf("%-15s%-10s%-25s%-25s%-15i%-25s\n", cli.getDni(), cli.getNombre(), cli.getFecNac(), cli.getDomicilio(), cli.getTelf(), cli.getEmail(), cli.getDomicilio());
+        printf("1.-Modificar datos\nq.-Salir\n");
+        fgets(input, 2, stdin);
+        sscanf(input, "%c", input);
+        fflush(stdin);
+        switch (*input)
+        {
+        case '1':
+            // modificarDatos(prof);
+            break;
+        case 'q':
+            printf(FRED "\nSaliendo.\n\n");
+            break;
+        default:
+            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
+            break;
+        }
+    } while (*input != 'q');
+    free(input);
 }

@@ -33,7 +33,7 @@ namespace containers
         void setTelf(unsigned int telf);
     };
 
-    class Movimiento
+    class MovimientoCpp
     {
     private:
         unsigned int idMovimiento;
@@ -44,8 +44,8 @@ namespace containers
         string concepto;
 
     public:
-        Movimiento(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto);
-        ~Movimiento();
+        MovimientoCpp(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto);
+        ~MovimientoCpp();
         void setIdMovimiento(unsigned int idMovimiento);
         unsigned int getIdMovimiento() const;
         void setIbanOrigen(string ibanOrigen);
@@ -67,10 +67,10 @@ namespace containers
         string iban;
         float saldo;
         string fecCreacion;
-        Movimiento *movimientos;
+        MovimientoCpp *movimientos;
 
     public:
-        CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, Movimiento *movimientos);
+        CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, MovimientoCpp *movimientos);
         CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion); //constructor sin movimientos, para cuando se leen solo las CuentaCpps
         ~CuentaCpp();
         string getDni() const;
@@ -78,11 +78,11 @@ namespace containers
         float getSaldo() const;
         void setSaldo(float saldo);
         string getFecCreacion() const;
-        Movimiento *getMovimientos() const;
-        void setMovimientos(Movimiento *mov);
+        MovimientoCpp *getMovimientos() const;
+        void setMovimientos(MovimientoCpp *mov);
     };
 
-    class Inversion
+    class InversionCpp
     {
     private:
         char *idCompania;
@@ -91,10 +91,10 @@ namespace containers
         char *fechaCompra;
 
     public:
-        Inversion();
-        Inversion(const Inversion &o);
-        Inversion(char *idCompania, float valorCompra, int cantidad, char *fechaCompra);
-        ~Inversion();
+        InversionCpp();
+        InversionCpp(const InversionCpp &o);
+        InversionCpp(char *idCompania, float valorCompra, int cantidad, char *fechaCompra);
+        ~InversionCpp();
         char *getIdCompania() const;
         float getValorCompra() const;
         int getCantidad() const;
@@ -105,13 +105,13 @@ namespace containers
     {
     private:
         int count;
-        Inversion *inversiones;
+        InversionCpp *inversiones;
 
     public:
         Inversiones(int count);
         ~Inversiones();
-        Inversion *getInversiones() const;
-        void setInversion(unsigned int index, Inversion *inversion);
+        InversionCpp *getInversiones() const;
+        void setInversionCpp(unsigned int index, InversionCpp *InversionCpp);
         int getCount() const;
     };
 

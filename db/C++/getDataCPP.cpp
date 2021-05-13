@@ -1,7 +1,7 @@
 #include "getDataCPP.h"
 #include <string.h>
 #include <string>
-#include "../../../lib/sqlite3/sqlite3.h"
+#include "../../lib/sqlite3/sqlite3.h"
 #include "../dbConnection.h"
 
 using namespace std;
@@ -30,7 +30,7 @@ containers::Inversiones *getInversiones(string dni)
     int i = 0;
     while ((step = sqlite3_step(res)) == SQLITE_ROW)
     {
-        inversiones->setInversion(i, new containers::Inversion(strdup((const char *)sqlite3_column_text(res, 1)), sqlite3_column_double(res, 2), sqlite3_column_double(res, 3), strdup((const char *)sqlite3_column_text(res, 4))));
+        inversiones->setInversionCpp(i, new containers::InversionCpp(strdup((const char *)sqlite3_column_text(res, 1)), sqlite3_column_double(res, 2), sqlite3_column_double(res, 3), strdup((const char *)sqlite3_column_text(res, 4))));
         i++;
     }
 

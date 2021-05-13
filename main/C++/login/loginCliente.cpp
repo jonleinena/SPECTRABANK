@@ -1,13 +1,17 @@
 #include <iostream>
 #include <string.h>
 #include <stdlib.h>
+
+extern "C"
+{
 #include "../../../lib/sqlite3/sqlite3.h"
-#include "loginCliente.h"
-#include "../utils/containers/containers.h"
 #include "../../../utils/colors.h"
 #include "../../../db/dbConnection.h"
 #include "../../../db/C/getData.h"
 #include "../../C/utils/structures.h"
+}
+#include "loginCliente.h"
+#include "../utils/containers/containers.h"
 #include "../menuCliente/menuCliente.h"
 
 using namespace std;
@@ -31,11 +35,11 @@ void loginCliente(void)
         cin >> email;
         cout << endl;
 
-        cout << ("Introduce contrase%ca: ", 164);
+        cout << "Introduce contrasena: " << endl;
         cin >> contrasenya;
         cout << endl;
 
-        *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
+        // *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
 
         if (startConn != SQLITE_OK)
         {
