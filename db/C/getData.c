@@ -8,21 +8,21 @@
 
 int numFilas = 1;
 
-int getLogin(char *email, char *contrasenya)
+int getLogin(char *email, char *contrasenya, int userType) //userType=0 -> Cliente / userType=1 -> Profesional
 {
     int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
     int rc;
     char *err_msg = 0;
     sqlite3_stmt *res;
 
-    char *sql = "SELECT P.CONTRASENYA, C.CONTRASENYA FROM PROFESIONAL P, CLIENTE C WHERE P.CORREO = ? OR C.CORREO = ?";
+    char *sql = "SELECT C.CONTRASENYA, P.CONTRASENYA FROM PROFESIONAL P, CLIENTE C WHERE P.CORREO = ? OR C.CORREO = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC);
-        sqlite3_bind_text(res, 2, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+        sqlite3_bind_text(res, 1, email, (strlen(email) - userType), SQLITE_STATIC);
+        sqlite3_bind_text(res, 2, email, (strlen(email) - userType), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {
@@ -33,7 +33,10 @@ int getLogin(char *email, char *contrasenya)
 
     if (step == SQLITE_ROW)
     {
-        comprobacionContrasenya = strcmp(contrasenya, sqlite3_column_text(res, 0));
+        printf("Hola");
+        char *contrasenya1 = sqlite3_column_text(res, userType);
+        printf("%s, %i, %i", contrasenya1, strlen(contrasenya1), strlen(contrasenya));
+        comprobacionContrasenya = strcmp(contrasenya, contrasenya1);
     }
     else
         comprobacionContrasenya = 1;
@@ -96,7 +99,7 @@ Cliente *getInfoCliente(char *email)
 
     if (rc == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+        sqlite3_bind_text(res, 1, email, strlen(email), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {

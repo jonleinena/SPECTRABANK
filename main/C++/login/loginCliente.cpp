@@ -43,7 +43,7 @@ void loginCliente(void)
 
         if (startConn != SQLITE_OK)
         {
-            resultLogin = getLogin(email, contrasenya);
+            resultLogin = getLogin(email, contrasenya, 0);
         }
         else
             break;

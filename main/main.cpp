@@ -86,7 +86,7 @@ int main(void)
     {
         printf(FCYAN
                "1.- Inicio de sesion como profesional\n"
-               "2.- Inicio de sesion como cliente (no funciona)\n"
+               "2.- Inicio de sesion como cliente\n"
                "q.- Cerrar\n\n"
                "Inserte selecci%cn: ",
                162);

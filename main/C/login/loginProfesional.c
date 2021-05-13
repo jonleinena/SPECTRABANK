@@ -34,7 +34,7 @@ void loginProfesional(void)
 
         if (startConn != SQLITE_OK)
         {
-            resultLogin = getLogin(email, contrasenya);
+            resultLogin = getLogin(email, contrasenya, 1);
         }
         else
             break;

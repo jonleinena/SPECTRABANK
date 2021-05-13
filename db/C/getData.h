@@ -6,7 +6,7 @@
 
 extern int numFilas;
 
-int getLogin(char *email, char *contrasenya);
+int getLogin(char *email, char *contrasenya, int userType);
 Profesional *getInfoProfesional(char *email);
 Cliente *getInfoCliente(char *email);
 Cliente **getListaClientes(char *idProf);

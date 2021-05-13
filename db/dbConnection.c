@@ -6,7 +6,7 @@ sqlite3 *db;
 
 int startConn()
 {
-    int rc = sqlite3_open("SpectreBankDB.db", &db);
+    int rc = sqlite3_open("./db/SpectreBankDB.db", &db);
 
     if (rc != SQLITE_OK)
     {
