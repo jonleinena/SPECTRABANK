@@ -12,8 +12,10 @@ extern "C"
 #include "../../C/utils/structures.h"
 }
 #include "../utils/containers/containers.h"
+#include <iomanip>
 
 using namespace std;
+using std::setw;
 using namespace containers;
 
 void menuCliente(ClienteCpp &cli)
@@ -29,7 +31,7 @@ void menuCliente(ClienteCpp &cli)
 
     do
     {
-        cout << (FGREN "**********************Bienvenido, %s**********************", cli.getNombre()) << endl;
+        cout << FGREN "**********************Bienvenido " << cli.getNombre() << "**********************" << endl;
         cout << (FCYAN
                  "1.- Ver listado de cuentas\n"
                  "2.- Gestionar inversiones\n"
@@ -82,30 +84,35 @@ void mostrarCuentas(ClienteCpp &cli)
     int *index;
     index = new int;
 
+    cout << cli.getNombre() << endl;
+
     containers::CuentaCpp *listaCuentas;
-    listaCuentas = (CuentaCpp *)malloc(30 * sizeof(CuentaCpp)); //no se usa el new porque este llama al constructor por defecto y malloc no
+    listaCuentas = new CuentaCpp[10];
     for (int i = 0; i < numFilas; i++)
     {
         // el &cli.getDni()[0] es para pasar el puntero de la pos. 0 del dni al metodo. el c_str() davuelve un const char* y da errores
 
-        char *dni = (getCuentasCliente(&cli.getDni()[0]) + i)->dniPropietario;
-        char *iban = (getCuentasCliente(&cli.getDni()[0]) + i)->iban;
-        float saldo = (getCuentasCliente(&cli.getDni()[0]) + i)->saldo;
-        char *fechaCreacion = (getCuentasCliente(&cli.getDni()[0]) + i)->fechaCreacion;
-
+        Cuenta *cuentasCliente = (Cuenta *)malloc(30 * sizeof(Cuenta));
+        cuentasCliente = getCuentasCliente(&cli.getDni()[0]);
         //inicializamos el array de listaCuentas con cuentas SIN movimientos porque todavía no tenemos estos
-
-        listaCuentas[i] = CuentaCpp(string(dni), string(iban), saldo, string(fechaCreacion));
+        listaCuentas[i].setDni(string((cuentasCliente + i)->dniPropietario));
+        listaCuentas[i].setFecCreacion(string((cuentasCliente + i)->fechaCreacion));
+        listaCuentas[i].setIban(string((cuentasCliente + i)->iban));
+        listaCuentas[i].setSaldo((cuentasCliente + i)->saldo);
     }
 
-    listaCuentas = (CuentaCpp *)realloc(listaCuentas, numFilas * sizeof(CuentaCpp)); // resize the memory block pointed to by listaCuentas
+    //PROBLEMAS CON REALLOC
+    //listaCuentas = (CuentaCpp *)realloc(listaCuentas, numFilas * sizeof(CuentaCpp)); // resize the memory block pointed to by listaCuentas
 
-    cout << "\n************ CUENTAS DE %s**************\n"
-         << cli.getNombre() << endl;
+    cout << "\n************ CUENTAS DE" << cli.getNombre() << "**************"
+         << endl;
     printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
     for (int i = 0; i < numFilas; i++)
     {
-        printf("%-10d%-30s%-15.2f%-25s%-10s\n", i, (listaCuentas + i)->getIban(), (listaCuentas + i)->getSaldo(), (listaCuentas + i)->getFecCreacion(), (listaCuentas + i)->getDni());
+
+        //printf("%-10d%-30s%-15.2f%-25s%-10s\n", i, cuentas_ptr[i].getIban(), cuentas_ptr[i].getSaldo(), cuentas_ptr[i].getFecCreacion(), cuentas_ptr[i].getDni());
+        //el printf da errores por los string
+        cout << i << setw(30) << listaCuentas[i].getIban() << setw(15) << listaCuentas[i].getSaldo() << setw(25) << listaCuentas[i].getFecCreacion() << setw(10) << listaCuentas[i].getDni() << endl;
     }
 
     do

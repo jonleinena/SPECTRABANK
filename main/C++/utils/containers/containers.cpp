@@ -74,12 +74,33 @@ containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo
     this->fecCreacion = fecCreacion;
     this->movimientos = movimientos;
 }
-containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion)
+containers::CuentaCpp::CuentaCpp(char *dniPropietario, char *iban, float saldo, char *fecCreacion)
 {
-    this->dniPropietario = dniPropietario;
-    this->iban = iban;
+    this->dniPropietario = string(dniPropietario);
+    this->iban = string(iban);
     this->saldo = saldo;
-    this->fecCreacion = fecCreacion;
+    this->fecCreacion = string(fecCreacion);
+}
+containers::CuentaCpp::CuentaCpp(const CuentaCpp &c)
+{
+    this->dniPropietario = c.getDni();
+    this->iban = c.getIban();
+    this->saldo = c.getSaldo();
+    this->fecCreacion = c.getFecCreacion();
+}
+containers::CuentaCpp &containers::CuentaCpp::operator=(const containers::CuentaCpp &c)
+{
+    this->dniPropietario = c.getDni();
+    this->iban = c.getIban();
+    this->saldo = c.getSaldo();
+    this->fecCreacion = c.getFecCreacion();
+}
+containers::CuentaCpp::CuentaCpp()
+{
+    this->dniPropietario = "a";
+    this->fecCreacion = "b";
+    this->saldo = 0;
+    this->iban = "f";
 }
 containers::CuentaCpp::~CuentaCpp()
 {
@@ -89,9 +110,17 @@ string containers::CuentaCpp::getDni() const
 {
     return this->dniPropietario;
 }
+void containers::CuentaCpp::setDni(string dni)
+{
+    this->dniPropietario = dni;
+}
 string containers::CuentaCpp::getIban() const
 {
     return this->iban;
+}
+void containers::CuentaCpp::setIban(string iban)
+{
+    this->iban = iban;
 }
 float containers::CuentaCpp::getSaldo() const
 {
@@ -104,6 +133,10 @@ void containers::CuentaCpp::setSaldo(float saldo)
 string containers::CuentaCpp::getFecCreacion() const
 {
     return this->fecCreacion;
+}
+void containers::CuentaCpp::setFecCreacion(string fecCreacion)
+{
+    this->fecCreacion = fecCreacion;
 }
 containers::MovimientoCpp *containers::CuentaCpp::getMovimientos() const
 {

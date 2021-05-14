@@ -71,13 +71,19 @@ namespace containers
 
     public:
         CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, MovimientoCpp *movimientos);
-        CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion); //constructor sin movimientos, para cuando se leen solo las CuentaCpps
+        CuentaCpp(char *dniPropietario, char *iban, float saldo, char *fecCreacion); //constructor sin movimientos, para cuando se leen solo las CuentaCpps
+        CuentaCpp(const CuentaCpp &c);
+        CuentaCpp();
+        CuentaCpp &operator=(const CuentaCpp &c);
         ~CuentaCpp();
         string getDni() const;
+        void setDni(string dni);
         string getIban() const;
+        void setIban(string iban);
         float getSaldo() const;
         void setSaldo(float saldo);
         string getFecCreacion() const;
+        void setFecCreacion(string fecCreacion);
         MovimientoCpp *getMovimientos() const;
         void setMovimientos(MovimientoCpp *mov);
     };

@@ -50,7 +50,7 @@ void loginCliente(void)
 
         if (resultLogin == 0)
         {
-            cout << "INICIO DE SESION CORRECTO" << FGREN << endl;
+            cout << FGREN "INICIO DE SESION CORRECTO" << endl;
             cout << "\e[1;1H\e[2J" << endl;
             ClienteCpp c(getInfoCliente(email));
             menuCliente(c);

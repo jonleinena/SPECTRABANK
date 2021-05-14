@@ -33,9 +33,9 @@ int getLogin(char *email, char *contrasenya, int userType) //userType=0 -> Clien
 
     if (step == SQLITE_ROW)
     {
-        printf("Hola");
+
         char *contrasenya1 = sqlite3_column_text(res, userType);
-        printf("%s, %i, %i", contrasenya1, strlen(contrasenya1), strlen(contrasenya));
+        //printf("%s, %i, %i", contrasenya1, strlen(contrasenya1), strlen(contrasenya));
         comprobacionContrasenya = strcmp(contrasenya, contrasenya1);
     }
     else
