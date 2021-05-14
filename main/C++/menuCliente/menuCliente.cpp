@@ -23,11 +23,10 @@ using namespace containers;
 
 void menuCliente(ClienteCpp &cli)
 {
-
     char *input;
     input = new char;
 
-    cout << "\e[1;1H\e[2J" << endl; //limpiar terminal
+    cout << CLEAR << endl; //limpiar terminal
 
     do
     {
@@ -45,17 +44,18 @@ void menuCliente(ClienteCpp &cli)
         switch (*input)
         {
         case '1':
-            cout << ("\e[1;1H\e[2J") << endl;
-            mostrarCuentas(cli);
+            cout << CLEAR << endl;
+            menuCuentas(cli);
             cout << endl;
             break;
         case '2':
-            cout << ("\e[1;1H\e[2J") << endl;
+            cout << CLEAR << endl;
             // menuInversiones(cli);
             cout << endl;
             break;
         case '3':
-            verDatosCliente(cli);
+            cout << CLEAR << endl;
+            menuDatosCliente(cli);
             break;
         case 'q':
             cout << (FRED "\nSaliendo.\n") << endl;
@@ -68,20 +68,19 @@ void menuCliente(ClienteCpp &cli)
     } while (*input != 'q');
 }
 
-void mostrarCuentas(ClienteCpp &cli)
+
+void menuCuentas(ClienteCpp &cli)
 {
     char *input;
     input = new char;
     int index;
 
-    cout << cli.getNombre() << endl;
-
     containers::CuentaCpp *listaCuentas;
-
     Cuenta *cuentasCliente = (Cuenta *)malloc(30 * sizeof(Cuenta));
     // el &cli.getDni()[0] es para pasar el puntero de la pos. 0 del dni al metodo. el c_str() davuelve un const char* y da errores
     cuentasCliente = getCuentasCliente(&cli.getDni()[0]);
     listaCuentas = new CuentaCpp[numFilas];
+
     for (int i = 0; i < numFilas; i++)
     {
 
@@ -92,44 +91,37 @@ void mostrarCuentas(ClienteCpp &cli)
         listaCuentas[i].setSaldo((cuentasCliente + i)->saldo);
     }
 
-    cout << "\n************ CUENTAS DE " << cli.getNombre() << "**************"
-         << endl;
-    printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
-
-    for (int i = 0; i < numFilas; i++)
-    {
-        //el printf da errores por los string
-        cout << i << setw(30) << listaCuentas[i].getIban() << setw(15) << listaCuentas[i].getSaldo() << setw(25) << listaCuentas[i].getFecCreacion() << setw(10) << listaCuentas[i].getDni() << endl;
-    }
-
     do
     {
-        printf(FCYAN
-               "\n1.- Visualizar movimientos de una cuenta\n"
-               "q.- Atras\n");
+        mostrarCuentas(cli, listaCuentas);
+        cout << FCYAN << "\n1.- Visualizar movimientos de una cuenta\n"
+                      << "q.- Atras\n" << endl;
         cin >> input;
+        cout << CLEAR << endl;
 
         switch (*input)
         {
         case '1':
-            printf("INTRODUZCA EL INDICE DE LA CUENTA\n");
+            mostrarCuentas(cli, listaCuentas);
+            cout << FCYAN << "\nINTRODUZCA INDICE DE LA CUENTA: ";
             cin >> index;
+            cout << CLEAR << endl;
+
             if (index < 0 || index > numFilas)
             {
-                printf(FRED "Introduce un indice valido\n" FCYAN);
+                cout << FRED << "Introduce un indice valido" << endl;
             }
             else
             {
-
                 cargarMovimientos((listaCuentas[index]));
-                verMovimientos(listaCuentas[index]);
+                mostrarMovimientos(listaCuentas[index]);
             }
             break;
         case 'q':
-            printf(FRED "\nSaliendo.\n\n" FCYAN);
             break;
         default:
-            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
+            cout << CLEAR << endl;
+            cout << FRED << "\nIntroduce una opcion valida, por favor.\n" << endl;
             break;
         }
     } while (*input != 'q');
@@ -137,35 +129,50 @@ void mostrarCuentas(ClienteCpp &cli)
     delete (input);
 }
 
-void verDatosCliente(ClienteCpp &cli)
-{
-    printf("\e[1;1H\e[2J");
+
+void menuDatosCliente(ClienteCpp &cli){
     char *input = new char;
 
     do
     {
-        printf(FCYAN "%-15s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
-        cout << cli.getDni() << setw(15) << cli.getNombre() << setw(25) << cli.getFecNac() << setw(25) << cli.getDomicilio() << setw(15) << cli.getTelf() << setw(25) << cli.getEmail() << setw(15) << cli.getDomicilio() << endl;
-        printf("1.-Modificar datos\nq.-Salir\n");
-        
+        mostrarDatosCliente(cli);
+        cout << FCYAN << "1.-Modificar datos\n"
+                      << "q.-Salir" << endl;
+
         cin >> input;
         cin.ignore();
 
         switch (*input)
         {
         case '1':
+            cout << CLEAR << endl;
             modificarDatosCliente(cli);
             break;
         case 'q':
-            printf(FRED "\nSaliendo.\n\n");
+            cout << CLEAR << endl;
             break;
         default:
-            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
+            cout << CLEAR << endl;
+            cout << FRED << "\nIntroduce una opcion valida, por favor.\n" << endl;
             break;
         }
     } while (*input != 'q');
     delete (input);
 }
+
+
+void mostrarCuentas(ClienteCpp &cli, CuentaCpp *listaCuentas)
+{
+    cout << "************ CUENTAS DE " << cli.getNombre() << " **************" << endl;
+    cout << "INDICE" << setw(25) << "IBAN" << setw(15) << "SALDO" << setw(25) << "FECHA CREACION" << setw(10) << "DNI" << endl;
+
+    for (int i = 0; i < numFilas; i++)
+    {
+        cout << i << setw(30) << listaCuentas[i].getIban() << setw(15) << listaCuentas[i].getSaldo() << setw(25) << listaCuentas[i].getFecCreacion() << setw(10) << listaCuentas[i].getDni() << endl;
+    }
+}
+
+
 void cargarMovimientos(CuentaCpp &c)
 {
     Movimiento *movimientos = (Movimiento *)malloc(50 * sizeof(Movimiento));
@@ -180,18 +187,34 @@ void cargarMovimientos(CuentaCpp &c)
 
     c.setMovimientos(listaMovimientos);
 }
-void verMovimientos(CuentaCpp &c)
+
+
+void mostrarMovimientos(CuentaCpp &c)
 {
-    cout << "\n************ MOVIMIENTOS CUENTA" << c.getIban() << "**************"
-         << endl;
-    printf("%-10s%-30s%-30s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
+    cout << "\n************ MOVIMIENTOS CUENTA " << c.getIban() << " **************" << endl;
+    cout << "ID" << setw(30) << "ORIGEN" << setw(30) << "DESTINO" << setw(10) << "IMPORTE" << setw(25) << "FECHA" << setw(25) << "CONCEPTO" << endl;
 
     for (int i = 0; i < numFilas; i++)
     {
         cout << c.getMovimientos()[i].getIdMovimiento() << setw(30) << c.getMovimientos()[i].getIbanOrigen() << setw(30) << c.getMovimientos()[i].getIbanDestino()
              << setw(10) << c.getMovimientos()[i].getImporte() << setw(25) << c.getMovimientos()[i].getFecha() << setw(25) << c.getMovimientos()[i].getConcepto() << endl;
     }
+
+    cout << "\nPresione Enter para salir";
+    
+    cin.get();
+    cin.ignore();
+    cout << CLEAR << endl;
 }
+
+
+void mostrarDatosCliente(ClienteCpp &cli)
+{
+    cout << "DNI" << setw(25) << "NOMBRE Y APELLIDOS" << setw(25) << "FECHA DE NACIMIENTO" << setw(15) << "TELEFONO" << setw(25) << "CORREO ELECTRONICO" << setw(15) << "DOMICILIO" << endl;
+    cout << cli.getDni() << setw(25) << cli.getNombre() << setw(25) << cli.getFecNac() << setw(15) << cli.getTelf() << setw(25) << cli.getEmail() << setw(15) << cli.getDomicilio() << endl;
+}
+
+
 void modificarDatosCliente(ClienteCpp &cli)
 {
     char *input, *selec;
@@ -200,78 +223,61 @@ void modificarDatosCliente(ClienteCpp &cli)
 
     do
     {
-        printf("1.-Modificar telefono\n2.-Modificar correo\n3.-Modificar domicilio\n4.-Modificar contrasena\nq.-Salir\n");
+        mostrarDatosCliente(cli);
+        cout << FCYAN << "1.-Modificar telefono\n"
+                      << "2.-Modificar correo\n"
+                      << "3.-Modificar domicilio\n"
+                      << "4.-Modificar contrasena\n"
+                      << "q.-Salir" << endl;
         cin >> selec;
         switch (*selec)
         {
         case '1':
-            printf("INTRODUCE EL NUEVO TELEFONO: \n");
-            cin >> input;
-            cin.ignore();
-            if (modificarCliente(selec, cli, input) == 101)
-            {
-                cout << FGREN << "TELEFONO CAMBIADO CORRECTAMENTE" << endl;
-                cli.setTelf(atoi(input));
-                sleep(1);
-                cout << "\e[1;1H\e[2J" << endl;
-            }
-            else
-                printf("ERROR EN EL GUARDADO DE DATOS\n");
-
+            cout << FCYAN << "INTRODUCE EL NUEVO TELEFONO: ";
             break;
         case '2':
-            printf("INTRODUCE EL NUEVO CORREO: \n");
-            cin >> input;
-            cin.ignore();
-            if (modificarCliente(selec, cli, input) == 101)
-            {
-                cout << FGREN << "CORREO CAMBIADO CORRECTAMENTE" << FCYAN << endl;
-                cli.setEmail(string(input));
-                sleep(1);
-                cout << "\e[1;1H\e[2J" << endl;
-            }
-            else
-                printf("ERROR EN EL GUARDADO DE DATOS\n");
+            cout << FCYAN << "INTRODUCE EL NUEVO CORREO: ";
             break;
         case '3':
-            printf("INTRODUCE EL NUEVO DOMICILIO: \n");
-            cin >> input;
-            cin.ignore();
-            if (modificarCliente(selec, cli, input) == 101)
-            {
-                cout << FGREN << "DOMICILIO CAMBIADO CORRECTAMENTE" << FCYAN << endl;
-                cli.setDomicilio(string(input));
-                sleep(1);
-                cout << "\e[1;1H\e[2J" << endl;
-            }
-            else
-                printf("ERROR EN EL GUARDADO DE DATOS\n");
+            cout << FCYAN << "INTRODUCE EL NUEVO DOMICILIO: ";
             break;
         case '4':
-            printf("INTRODUCE LA NUEVA CONTRASENA: ");
-            cin >> input;
-            cin.ignore();
-            if (modificarCliente(selec, cli, input) == 101)
-            {
-                cout << FGREN << "CONTRASENA CAMBIADA CORRECTAMENTE" << FCYAN << endl;
-                sleep(1);
-                cout << "\e[1;1H\e[2J" << endl;
-            }
-            else
-                printf("ERROR EN EL GUARDADO DE DATOS\n");
+            cout << FCYAN << "INTRODUCE LA NUEVA CONTRASENA: ";
             break;
         case 'q':
-            printf(FRED "\nSaliendo.\n\n");
-            printf("\e[1;1H\e[2J");
-            fflush(stdin);
+            cout << CLEAR << endl;
             break;
         default:
-            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
+            cout << FRED << "\nIntroduce una opcion valida, por favor.\n" << endl;
             break;
         }
-        fflush(stdin);
 
+        cin >> input;
+        cin.ignore();
+
+        if (modificarCliente(selec, cli, input) == 101)
+        {
+            if(atoi(selec) == 1){
+                cout << FGREN << "TELEFONO CAMBIADO CORRECTAMENTE" << endl;
+                cli.setTelf(atoi(input));
+            } else if (atoi(selec)==2){
+                cout << FGREN << "CORREO CAMBIADO CORRECTAMENTE" << FCYAN << endl;
+                cli.setEmail(string(input));
+            } else if (atoi(selec)==3){
+                cout << FGREN << "DOMICILIO CAMBIADO CORRECTAMENTE" << FCYAN << endl;
+                cli.setDomicilio(string(input));
+            } else if (atoi(selec)==4){
+                cout << FGREN << "CONTRASENA CAMBIADA CORRECTAMENTE" << FCYAN << endl;
+            }
+
+            sleep(2);
+            cout << CLEAR << endl;
+
+        }else{
+            cout << FRED << "ERROR EN EL GUARDADO DE DATOS" << endl; 
+        }
+            
     } while (*selec != 'q');
 
-    free(input);
+    delete input, selec;
 }

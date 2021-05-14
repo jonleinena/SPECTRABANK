@@ -6,10 +6,12 @@
 using namespace containers;
 
 void menuCliente(ClienteCpp &cli);
-void mostrarCuentas(ClienteCpp &cli);
-void verDatosCliente(ClienteCpp &cli);
+void menuCuentas(ClienteCpp &cli);
+void menuDatosCliente(ClienteCpp &cli);
+void mostrarCuentas(ClienteCpp &cli, CuentaCpp *listaCuentas);
 void cargarMovimientos(CuentaCpp &c);
-void verMovimientos(CuentaCpp &c);
+void mostrarMovimientos(CuentaCpp &c);
+void mostrarDatosCliente(ClienteCpp &cli);
 void modificarDatosCliente(ClienteCpp &c);
 
 #endif
