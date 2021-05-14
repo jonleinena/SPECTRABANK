@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <iostream>
+#include <string>
+#include <unistd.h>
 #include "menuCliente.h"
 #include "../utils/inversiones/inversiones.h"
+#include "../../../db/C++/postDataCPP.h"
 
 extern "C"
 {
@@ -37,6 +40,7 @@ void menuCliente(ClienteCpp &cli)
                  "Inserte seleccion: ");
 
         cin >> input;
+        cin.ignore();
 
         switch (*input)
         {
@@ -141,11 +145,12 @@ void verDatosCliente(ClienteCpp &cli)
     do
     {
         printf(FCYAN "%-15s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
-        cout << setw(15) << cli.getDni() << setw(25) << cli.getNombre() << setw(25) << cli.getFecNac() << setw(15) << cli.getDomicilio() << setw(15) << cli.getTelf() << setw(25) << cli.getEmail() << setw(15) << cli.getDomicilio() << endl;
+        cout << cli.getDni() << setw(15) << cli.getNombre() << setw(25) << cli.getFecNac() << setw(25) << cli.getDomicilio() << setw(15) << cli.getTelf() << setw(25) << cli.getEmail() << setw(15) << cli.getDomicilio() << endl;
         printf("1.-Modificar datos\nq.-Salir\n");
-        fgets(input, 2, stdin);
-        sscanf(input, "%c", input);
-        fflush(stdin);
+        
+        cin >> input;
+        cin.ignore();
+
         switch (*input)
         {
         case '1':
@@ -189,4 +194,84 @@ void verMovimientos(CuentaCpp &c)
 }
 void modificarDatosCliente(ClienteCpp &cli)
 {
+    char *input, *selec;
+    input = new char[30];
+    selec = new char;
+
+    do
+    {
+        printf("1.-Modificar telefono\n2.-Modificar correo\n3.-Modificar domicilio\n4.-Modificar contrasena\nq.-Salir\n");
+        cin >> selec;
+        switch (*selec)
+        {
+        case '1':
+            printf("INTRODUCE EL NUEVO TELEFONO: \n");
+            cin >> input;
+            cin.ignore();
+            if (modificarCliente(selec, cli, input) == 101)
+            {
+                cout << FGREN << "TELEFONO CAMBIADO CORRECTAMENTE" << endl;
+                cli.setTelf(atoi(input));
+                sleep(1);
+                cout << "\e[1;1H\e[2J" << endl;
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
+
+            break;
+        case '2':
+            printf("INTRODUCE EL NUEVO CORREO: \n");
+            cin >> input;
+            cin.ignore();
+            if (modificarCliente(selec, cli, input) == 101)
+            {
+                cout << FGREN << "CORREO CAMBIADO CORRECTAMENTE" << FCYAN << endl;
+                cli.setEmail(string(input));
+                sleep(1);
+                cout << "\e[1;1H\e[2J" << endl;
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
+            break;
+        case '3':
+            printf("INTRODUCE EL NUEVO DOMICILIO: \n");
+            cin >> input;
+            cin.ignore();
+            if (modificarCliente(selec, cli, input) == 101)
+            {
+                cout << FGREN << "DOMICILIO CAMBIADO CORRECTAMENTE" << FCYAN << endl;
+                cli.setDomicilio(string(input));
+                sleep(1);
+                cout << "\e[1;1H\e[2J" << endl;
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
+            break;
+        case '4':
+            printf("INTRODUCE LA NUEVA CONTRASENA: ");
+            cin >> input;
+            cin.ignore();
+            if (modificarCliente(selec, cli, input) == 101)
+            {
+                cout << FGREN << "CONTRASENA CAMBIADA CORRECTAMENTE" << FCYAN << endl;
+                sleep(1);
+                cout << "\e[1;1H\e[2J" << endl;
+            }
+            else
+                printf("ERROR EN EL GUARDADO DE DATOS\n");
+            break;
+        case 'q':
+            printf(FRED "\nSaliendo.\n\n");
+            printf("\e[1;1H\e[2J");
+            fflush(stdin);
+            break;
+        default:
+            printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
+            break;
+        }
+        fflush(stdin);
+
+    } while (*selec != 'q');
+
+    free(input);
 }
