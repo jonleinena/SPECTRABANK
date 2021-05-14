@@ -13,7 +13,7 @@ Cliente **getListaClientes(char *idProf);
 Cuenta *getCuentasCliente(char *dniCliente);
 Inversion *getInversionClite(char *dniCli);
 Prestamo *getPrestamos(char *dniCli);
-Movimiento *getMovimientos(Cuenta *cue);
+Movimiento *getMovimientos(char *iban);
 Prestamo *getSolicitudesPrestamo(Profesional *prof);
 int *getCountTipoPrestamo(char *dniCli);
 #endif

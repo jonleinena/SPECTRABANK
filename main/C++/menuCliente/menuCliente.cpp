@@ -20,10 +20,7 @@ using namespace containers;
 
 void menuCliente(ClienteCpp &cli)
 {
-    /* if (startConn() == 0)
-    {
-        return 0;
-    } */
+
     char *input;
     input = new char;
 
@@ -58,17 +55,7 @@ void menuCliente(ClienteCpp &cli)
             break;
         case 'q':
             cout << (FRED "\nSaliendo.\n") << endl;
-            //revisar los free/delete
-            /**
-            for (int i = 0; i < numFilas; i++)
-            {
-                free((*(lista + i))->user);
-                free(*(lista + i));
-            }
-            free(lista);
-            free(input);
-            */
-
+            delete (input);
             break;
         default:
             cout << (FRED "\nIntroduce una opcion valida, por favor.\n") << endl;
@@ -81,19 +68,19 @@ void mostrarCuentas(ClienteCpp &cli)
 {
     char *input;
     input = new char;
-    int *index;
-    index = new int;
+    int index;
 
     cout << cli.getNombre() << endl;
 
     containers::CuentaCpp *listaCuentas;
-    listaCuentas = new CuentaCpp[10];
+
+    Cuenta *cuentasCliente = (Cuenta *)malloc(30 * sizeof(Cuenta));
+    // el &cli.getDni()[0] es para pasar el puntero de la pos. 0 del dni al metodo. el c_str() davuelve un const char* y da errores
+    cuentasCliente = getCuentasCliente(&cli.getDni()[0]);
+    listaCuentas = new CuentaCpp[numFilas];
     for (int i = 0; i < numFilas; i++)
     {
-        // el &cli.getDni()[0] es para pasar el puntero de la pos. 0 del dni al metodo. el c_str() davuelve un const char* y da errores
 
-        Cuenta *cuentasCliente = (Cuenta *)malloc(30 * sizeof(Cuenta));
-        cuentasCliente = getCuentasCliente(&cli.getDni()[0]);
         //inicializamos el array de listaCuentas con cuentas SIN movimientos porque todavía no tenemos estos
         listaCuentas[i].setDni(string((cuentasCliente + i)->dniPropietario));
         listaCuentas[i].setFecCreacion(string((cuentasCliente + i)->fechaCreacion));
@@ -101,16 +88,12 @@ void mostrarCuentas(ClienteCpp &cli)
         listaCuentas[i].setSaldo((cuentasCliente + i)->saldo);
     }
 
-    //PROBLEMAS CON REALLOC
-    //listaCuentas = (CuentaCpp *)realloc(listaCuentas, numFilas * sizeof(CuentaCpp)); // resize the memory block pointed to by listaCuentas
-
-    cout << "\n************ CUENTAS DE" << cli.getNombre() << "**************"
+    cout << "\n************ CUENTAS DE " << cli.getNombre() << "**************"
          << endl;
     printf("%-10s%-30s%-15s%-25s%-10s\n", "INDICE", "IBAN", "SALDO", "FECHA CREACION", "DNI");
+
     for (int i = 0; i < numFilas; i++)
     {
-
-        //printf("%-10d%-30s%-15.2f%-25s%-10s\n", i, cuentas_ptr[i].getIban(), cuentas_ptr[i].getSaldo(), cuentas_ptr[i].getFecCreacion(), cuentas_ptr[i].getDni());
         //el printf da errores por los string
         cout << i << setw(30) << listaCuentas[i].getIban() << setw(15) << listaCuentas[i].getSaldo() << setw(25) << listaCuentas[i].getFecCreacion() << setw(10) << listaCuentas[i].getDni() << endl;
     }
@@ -120,23 +103,22 @@ void mostrarCuentas(ClienteCpp &cli)
         printf(FCYAN
                "\n1.- Visualizar movimientos de una cuenta\n"
                "q.- Atras\n");
-        fgets(input, 2, stdin);
-        sscanf(input, "%c", input);
-        fflush(stdin);
+        cin >> input;
+
         switch (*input)
         {
         case '1':
             printf("INTRODUZCA EL INDICE DE LA CUENTA\n");
-            fgets(input, 4, stdin);
-            sscanf(input, "%i", index);
-            fflush(stdin);
-            if (*index < 0 || *index > numFilas)
+            cin >> index;
+            if (index < 0 || index > numFilas)
             {
                 printf(FRED "Introduce un indice valido\n" FCYAN);
             }
             else
             {
-                //verMovimientos((listaCuentas + *index));
+
+                cargarMovimientos((listaCuentas[index]));
+                verMovimientos(listaCuentas[index]);
             }
             break;
         case 'q':
@@ -146,11 +128,9 @@ void mostrarCuentas(ClienteCpp &cli)
             printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
             break;
         }
-
     } while (*input != 'q');
 
-    free(input);
-    free(index);
+    delete (input);
 }
 
 void verDatosCliente(ClienteCpp &cli)
@@ -161,7 +141,7 @@ void verDatosCliente(ClienteCpp &cli)
     do
     {
         printf(FCYAN "%-15s%-25s%-25s%-15s%-25s%-15s\n", "DNI", "NOMBRE Y APELLIDOS", "FECHA DE NACIMIENTO", "TELEFONO", "CORREO ELECTRONICO", "DOMICILIO");
-        printf("%-15s%-10s%-25s%-25s%-15i%-25s\n", cli.getDni(), cli.getNombre(), cli.getFecNac(), cli.getDomicilio(), cli.getTelf(), cli.getEmail(), cli.getDomicilio());
+        cout << setw(15) << cli.getDni() << setw(25) << cli.getNombre() << setw(25) << cli.getFecNac() << setw(15) << cli.getDomicilio() << setw(15) << cli.getTelf() << setw(25) << cli.getEmail() << setw(15) << cli.getDomicilio() << endl;
         printf("1.-Modificar datos\nq.-Salir\n");
         fgets(input, 2, stdin);
         sscanf(input, "%c", input);
@@ -169,7 +149,7 @@ void verDatosCliente(ClienteCpp &cli)
         switch (*input)
         {
         case '1':
-            // modificarDatos(prof);
+            modificarDatosCliente(cli);
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");
@@ -179,5 +159,34 @@ void verDatosCliente(ClienteCpp &cli)
             break;
         }
     } while (*input != 'q');
-    free(input);
+    delete (input);
+}
+void cargarMovimientos(CuentaCpp &c)
+{
+    Movimiento *movimientos = (Movimiento *)malloc(50 * sizeof(Movimiento));
+    movimientos = getMovimientos(&c.getIban()[0]);
+    MovimientoCpp *listaMovimientos = new MovimientoCpp[numFilas];
+
+    for (int i = 0; i < numFilas; i++)
+    {
+        listaMovimientos[i] = MovimientoCpp((movimientos + i));
+        free(movimientos + i);
+    }
+
+    c.setMovimientos(listaMovimientos);
+}
+void verMovimientos(CuentaCpp &c)
+{
+    cout << "\n************ MOVIMIENTOS CUENTA" << c.getIban() << "**************"
+         << endl;
+    printf("%-10s%-30s%-30s%-10s%-25s%-25s\n", "ID", "ORIGEN", "DESTINO", "IMPORTE", "FECHA", "CONCEPTO");
+
+    for (int i = 0; i < numFilas; i++)
+    {
+        cout << c.getMovimientos()[i].getIdMovimiento() << setw(30) << c.getMovimientos()[i].getIbanOrigen() << setw(30) << c.getMovimientos()[i].getIbanDestino()
+             << setw(10) << c.getMovimientos()[i].getImporte() << setw(25) << c.getMovimientos()[i].getFecha() << setw(25) << c.getMovimientos()[i].getConcepto() << endl;
+    }
+}
+void modificarDatosCliente(ClienteCpp &cli)
+{
 }

@@ -33,10 +33,7 @@ int getLogin(char *email, char *contrasenya, int userType) //userType=0 -> Clien
 
     if (step == SQLITE_ROW)
     {
-
-        char *contrasenya1 = sqlite3_column_text(res, userType);
-        //printf("%s, %i, %i", contrasenya1, strlen(contrasenya1), strlen(contrasenya));
-        comprobacionContrasenya = strcmp(contrasenya, contrasenya1);
+        comprobacionContrasenya = strcmp(contrasenya, sqlite3_column_text(res, userType));
     }
     else
         comprobacionContrasenya = 1;
@@ -319,7 +316,7 @@ Prestamo *getPrestamos(char *dniCliente)
     free(listaPrestamos);
 }
 
-Movimiento *getMovimientos(Cuenta *cue)
+Movimiento *getMovimientos(char *iban)
 {
     int rc, rc1;
     char *err_msg = 0;
@@ -333,10 +330,10 @@ Movimiento *getMovimientos(Cuenta *cue)
 
     if (rc == SQLITE_OK && rc1 == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
-        sqlite3_bind_text(res, 2, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
-        sqlite3_bind_text(res1, 1, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
-        sqlite3_bind_text(res1, 2, cue->iban, (strlen(cue->iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res, 1, iban, (strlen(iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res, 2, iban, (strlen(iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 1, iban, (strlen(iban)), SQLITE_STATIC);
+        sqlite3_bind_text(res1, 2, iban, (strlen(iban)), SQLITE_STATIC);
     }
     else
     {

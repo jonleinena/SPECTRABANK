@@ -80,6 +80,7 @@ containers::CuentaCpp::CuentaCpp(char *dniPropietario, char *iban, float saldo, 
     this->iban = string(iban);
     this->saldo = saldo;
     this->fecCreacion = string(fecCreacion);
+    this->movimientos = new MovimientoCpp[10];
 }
 containers::CuentaCpp::CuentaCpp(const CuentaCpp &c)
 {
@@ -87,6 +88,7 @@ containers::CuentaCpp::CuentaCpp(const CuentaCpp &c)
     this->iban = c.getIban();
     this->saldo = c.getSaldo();
     this->fecCreacion = c.getFecCreacion();
+    this->movimientos = new MovimientoCpp[10];
 }
 containers::CuentaCpp &containers::CuentaCpp::operator=(const containers::CuentaCpp &c)
 {
@@ -94,6 +96,7 @@ containers::CuentaCpp &containers::CuentaCpp::operator=(const containers::Cuenta
     this->iban = c.getIban();
     this->saldo = c.getSaldo();
     this->fecCreacion = c.getFecCreacion();
+    this->movimientos = new MovimientoCpp[10];
 }
 containers::CuentaCpp::CuentaCpp()
 {
@@ -101,6 +104,7 @@ containers::CuentaCpp::CuentaCpp()
     this->fecCreacion = "b";
     this->saldo = 0;
     this->iban = "f";
+    this->movimientos = new MovimientoCpp[10];
 }
 containers::CuentaCpp::~CuentaCpp()
 {
@@ -156,6 +160,33 @@ containers::MovimientoCpp::MovimientoCpp(unsigned int idMovimiento, string ibanO
     this->importe = importe;
     this->fecha = fecha;
     this->concepto = concepto;
+}
+containers::MovimientoCpp::MovimientoCpp(Movimiento *m)
+{
+    this->idMovimiento = m->idTransaccion;
+    this->ibanDestino = string(m->ibanDestino);
+    this->ibanOrigen = string(m->ibanOrigen);
+    this->importe = m->importe;
+    this->fecha = m->fecha;
+    this->concepto = m->concepto;
+}
+containers::MovimientoCpp ::MovimientoCpp()
+{
+    this->idMovimiento = 1;
+    this->ibanDestino = "a";
+    this->ibanOrigen = "b";
+    this->importe = 0;
+    this->fecha = "a";
+    this->concepto = "c";
+}
+containers::MovimientoCpp::MovimientoCpp(const MovimientoCpp &m)
+{
+    this->idMovimiento = m.getIdMovimiento();
+    this->ibanDestino = m.getIbanDestino();
+    this->ibanOrigen = m.getIbanOrigen();
+    this->importe = m.getImporte();
+    this->fecha = m.getFecha();
+    this->concepto = m.getConcepto();
 }
 containers::MovimientoCpp::~MovimientoCpp()
 {

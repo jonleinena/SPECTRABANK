@@ -45,6 +45,9 @@ namespace containers
 
     public:
         MovimientoCpp(unsigned int idMovimiento, string ibanOrigen, string ibanDestino, float importe, string fecha, string concepto);
+        MovimientoCpp(const MovimientoCpp &m);
+        MovimientoCpp();
+        MovimientoCpp(Movimiento *m);
         ~MovimientoCpp();
         void setIdMovimiento(unsigned int idMovimiento);
         unsigned int getIdMovimiento() const;

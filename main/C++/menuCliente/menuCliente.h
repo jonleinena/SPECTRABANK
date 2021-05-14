@@ -8,5 +8,8 @@ using namespace containers;
 void menuCliente(ClienteCpp &cli);
 void mostrarCuentas(ClienteCpp &cli);
 void verDatosCliente(ClienteCpp &cli);
+void cargarMovimientos(CuentaCpp &c);
+void verMovimientos(CuentaCpp &c);
+void modificarDatosCliente(ClienteCpp &c);
 
 #endif

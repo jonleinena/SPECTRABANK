@@ -301,7 +301,7 @@ void verMovimientos(Cuenta *cue)
 {
     Movimiento *movimientos;
     movimientos = (Movimiento *)malloc(40 * sizeof(Movimiento));
-    movimientos = getMovimientos(cue);
+    movimientos = getMovimientos(cue->iban);
     movimientos = realloc(movimientos, numFilas * sizeof(Movimiento));
 
     printf("\n************ MOVIMIENTOS CUENTA %s**************\n", cue->iban);
