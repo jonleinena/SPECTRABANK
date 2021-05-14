@@ -15,7 +15,7 @@ int modificarProfesional(char *selec, Profesional *prof, char *input)
     char *sql;
     char *sql1 = "UPDATE PROFESIONAL SET TELEFONO = ? WHERE ID_PROF = ?";
     char *sql2 = "UPDATE PROFESIONAL SET CORREO = ? WHERE ID_PROF = ?";
-    char *sql3 = "UPDATE PROFESIONAL SET TELEFONO = ? WHERE ID_PROF = ?";
+    char *sql3 = "UPDATE PROFESIONAL SET CONTRASENYA = ? WHERE ID_PROF = ?";
 
     switch (*selec)
     {
@@ -32,31 +32,12 @@ int modificarProfesional(char *selec, Profesional *prof, char *input)
         break;
     }
 
-    //printf("%s\n", sql);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
-
-        switch (*selec)
-        {
-        case '1':
-
-            sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
-            sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
-
-            break;
-        case '2':
-            sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
-            sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
-            break;
-        case '3':
-            sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
-            sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
-            break;
-        default:
-            break;
-        }
+        sqlite3_bind_text(res, 1, input, (strlen(input)), SQLITE_STATIC);
+        sqlite3_bind_text(res, 2, prof->idProfesional, (strlen(prof->idProfesional)), SQLITE_STATIC);
     }
     else
     {
@@ -68,7 +49,6 @@ int modificarProfesional(char *selec, Profesional *prof, char *input)
 
     return step;
 }
-/////////////////
 
 int modificarPrestamoADenegado(int *idPrestamo)
 {
@@ -78,7 +58,6 @@ int modificarPrestamoADenegado(int *idPrestamo)
 
     char *sql = "UPDATE PRESTAMO SET ESTADO = ? WHERE ID_PREST = ?";
 
-    //printf("%s\n", sql);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
@@ -106,7 +85,6 @@ void actualizarPrestamo(int *idPrestamo, float *tae)
 
     char *sql = "UPDATE PRESTAMO SET TAE = ? , ESTADO = 2 WHERE ID_PREST = ?";
 
-    //printf("%s\n", sql);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
