@@ -3,6 +3,7 @@
 #define BOLD_ON "\x1B[1m"
 #define CURS_ON "\x1B[3m"
 #define UNDER_ON "\x1B[4m"
+#define CLEAR "\e[1;1H\e[2J"
 
 //Los colores siguen el siguiente patrón:
 //
