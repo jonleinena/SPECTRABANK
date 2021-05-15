@@ -9,8 +9,8 @@ using namespace std;
 containers::Inversiones *getInversiones(string dni)
 {
     sqlite3_stmt *res, *res1;
-    char *SQL = "SELECT * FROM ACC_CLI WHERE DNI = ?";
-    char *SQL1 = "SELECT * FROM ACC_CLI WHERE DNI = ?";
+    const char *SQL = "SELECT * FROM ACC_CLI WHERE DNI = ?";
+    const char *SQL1 = "SELECT * FROM ACC_CLI WHERE DNI = ?";
 
     int rc = sqlite3_prepare_v2(db, SQL, -1, &res, 0);
     int rc1 = sqlite3_prepare_v2(db, SQL1, -1, &res1, 0);

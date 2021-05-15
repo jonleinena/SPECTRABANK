@@ -8,11 +8,11 @@ int modificarCliente(char *selec, ClienteCpp cli, char *input)
     char *err_msg = 0;
     sqlite3_stmt *res;
 
-    char *sql;
-    char *sql1 = "UPDATE CLIENTE SET NUM_TEL = ? WHERE DNI = ?";
-    char *sql2 = "UPDATE CLIENTE SET CORREO = ? WHERE DNI = ?";
-    char *sql3 = "UPDATE CLIENTE SET DOMICILIO = ? WHERE DNI = ?";
-    char *sql4 = "UPDATE CLIENTE SET CONTRASENYA = ? WHERE DNI = ?";
+    const char *sql;
+    const char *sql1 = "UPDATE CLIENTE SET NUM_TEL = ? WHERE DNI = ?";
+    const char *sql2 = "UPDATE CLIENTE SET CORREO = ? WHERE DNI = ?";
+    const char *sql3 = "UPDATE CLIENTE SET DOMICILIO = ? WHERE DNI = ?";
+    const char *sql4 = "UPDATE CLIENTE SET CONTRASENYA = ? WHERE DNI = ?";
 
     switch (*selec)
     {
