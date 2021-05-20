@@ -18,7 +18,7 @@ int main(void)
         return 0;
     }
 
-    //printf("\e[1;1H\e[2J"); //Esta limpieza se ejecuta para el buen funcionamiento de la apariencia de la consola
+    //printf(CLEAR); //Esta limpieza se ejecuta para el buen funcionamiento de la apariencia de la consola
     char *input;
     input = new char;
 
@@ -98,7 +98,7 @@ int main(void)
         switch (*input)
         {
         case '1':
-            printf("\e[1;1H\e[2J"); //Limpia el terminal
+            printf(CLEAR); //Limpia el terminal
             loginProfesional();
             break;
         case '2':

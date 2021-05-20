@@ -41,15 +41,15 @@ void menuInversiones(ClienteCpp &cli)
         switch (*input)
         {
         case '1':
-            cout << ("\e[1;1H\e[2J") << endl;
+            cout << (CLEAR) << endl;
             verInversiones(cli);
             break;
         case '2':
-            cout << ("\e[1;1H\e[2J") << endl;
+            cout << (CLEAR) << endl;
             comprarAcciones(cli);
             break;
         case '3':
-            cout << ("\e[1;1H\e[2J") << endl;
+            cout << (CLEAR) << endl;
             venderAcciones(cli);
             break;
         case 'q':

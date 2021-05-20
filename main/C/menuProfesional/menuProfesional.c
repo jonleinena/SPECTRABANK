@@ -19,7 +19,7 @@ void menuProfesional(Profesional *prof)
     Cliente **lista;
     lista = (Cliente **)malloc(50 * sizeof(Cliente *));
 
-    printf("\e[1;1H\e[2J"); //limpiar terminal
+    printf(CLEAR); //limpiar terminal
 
     do
     {
@@ -40,7 +40,7 @@ void menuProfesional(Profesional *prof)
         case '1':
             lista = getListaClientes((prof->idProfesional));
             lista = realloc(lista, numFilas * sizeof(Cliente *));
-            printf("\e[1;1H\e[2J");
+            printf(CLEAR);
             imprimirListaClientes(lista);
             printf("\n");
             break;
@@ -111,7 +111,7 @@ void imprimirListaClientes(Cliente **lista)
             clienteSel = (Cliente *)malloc(sizeof(Cliente));
             clienteSel = (*(lista + *index));
 
-            printf("\e[1;1H\e[2J");
+            printf(CLEAR);
 
             opcionesCltes(clienteSel);
             free(clienteSel);
@@ -145,7 +145,7 @@ void opcionesCltes(Cliente *cli)
 
         if (*input != '0' && *input != '1' && *input != '2' && *input != '3' && *input != 'q')
         {
-            printf("\e[1;1H\e[2J");
+            printf(CLEAR);
             printf(FRED "Inserte un valor valido\n" FCYAN);
         }
         else
@@ -163,7 +163,7 @@ void opcionesCltes(Cliente *cli)
                 break;
             case 'q':
                 printf(FRED "\nSaliendo.\n\n" FCYAN);
-                printf("\e[1;1H\e[2J");
+                printf(CLEAR);
                 break;
             default:
                 printf(FRED "\nIntroduce una opcion valida, por favor.\n\n" FCYAN);
@@ -238,7 +238,7 @@ void mostrarInversiones(Cliente *cli)
     char *input;
     input = malloc(sizeof(char));
 
-    printf("\e[1;1H\e[2J");
+    printf(CLEAR);
 
     do
     {
@@ -261,7 +261,7 @@ void mostrarInversiones(Cliente *cli)
 
     } while (*input != '\n');
 
-    printf("\e[1;1H\e[2J");
+    printf(CLEAR);
     free(input);
 }
 
@@ -270,7 +270,7 @@ void mostrarPrestamos(Cliente *cli)
     char *input;
     input = malloc(sizeof(char));
 
-    printf("\e[1;1H\e[2J");
+    printf(CLEAR);
 
     do
     {
@@ -293,7 +293,7 @@ void mostrarPrestamos(Cliente *cli)
 
     } while (*input != '\n');
 
-    printf("\e[1;1H\e[2J");
+    printf(CLEAR);
     free(input);
 }
 
@@ -371,7 +371,7 @@ void verSolicitudesPrestamo(Profesional *prof)
 
 void verDatosProfesional(Profesional *prof)
 {
-    printf("\e[1;1H\e[2J");
+    printf(CLEAR);
     char *input;
     input = malloc(sizeof(char));
 
@@ -456,7 +456,7 @@ void modificarDatos(Profesional *prof)
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");
-            printf("\e[1;1H\e[2J");
+            printf(CLEAR);
             fflush(stdin);
             break;
         default:

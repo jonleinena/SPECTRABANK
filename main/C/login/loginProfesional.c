@@ -42,7 +42,7 @@ void loginProfesional(void)
         if (resultLogin == 0)
         {
             printf("%sINICIO DE SESION CORRECTO\n", FGREN);
-            printf("\e[1;1H\e[2J");
+            printf(CLEAR);
             prof = getInfoProfesional(email);
             menuProfesional(prof);
         }
