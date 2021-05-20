@@ -102,6 +102,7 @@ int main(void)
             loginProfesional();
             break;
         case '2':
+            printf(CLEAR);
             loginCliente();
             break;
         case 'q':
