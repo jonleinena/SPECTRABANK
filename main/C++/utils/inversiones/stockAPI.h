@@ -13,7 +13,6 @@ namespace stockAPI
 
     public:
         Symbol(const char *description, const char *displaySymbol, const char *symbol, const char *type);
-        ~Symbol();
         const char *getDescription() const;
         const char *getDisplaySymbol() const;
         const char *getSymbol() const;

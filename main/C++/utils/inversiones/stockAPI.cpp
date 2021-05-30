@@ -1,8 +1,9 @@
 #include <curl/curl.h>
-#include "../../../lib/rapidjson/document.h"
+#include "../../../../lib/rapidjson/document.h"
 #include "stockAPI.h"
 #include <iostream>
 #include <string>
+#include <string.h>
 
 using namespace stockAPI;
 using namespace std;
@@ -21,14 +22,6 @@ Symbol::Symbol(const char *description, const char *displaySymbol, const char *s
     this->displaySymbol = displaySymbol;
     this->symbol = symbol;
     this->type = type;
-}
-
-Symbol::~Symbol()
-{
-    delete this->description;
-    delete this->displaySymbol;
-    delete this->symbol;
-    delete this->type;
 }
 
 const char *Symbol::getDescription() const
@@ -86,7 +79,6 @@ Search::Search(const char *query)
 }
 Search::~Search()
 {
-    //delete query; ERROR pointer being freed was not allocated
     delete results;
 }
 void Search::performSearch()
@@ -119,9 +111,10 @@ void Search::performSearch()
             for (int i = 0; i < tempSize; i++)
             {
                 string sy = document["result"].GetArray()[i]["symbol"].GetString();
+
                 if (sy.find(".") == string::npos)
                 {
-                    Symbol *s = new Symbol(document["result"].GetArray()[i]["description"].GetString(), document["result"].GetArray()[i]["displaySymbol"].GetString(), document["result"].GetArray()[i]["symbol"].GetString(), document["result"].GetArray()[i]["type"].GetString());
+                    Symbol *s = new Symbol(strdup(document["result"].GetArray()[i]["description"].GetString()), strdup(document["result"].GetArray()[i]["displaySymbol"].GetString()), strdup(document["result"].GetArray()[i]["symbol"].GetString()), strdup(document["result"].GetArray()[i]["type"].GetString()));
                     *(tempResults + finalSize) = s;
                     finalSize++;
                 }

@@ -8,7 +8,7 @@ using namespace containers;
 void menuCliente(ClienteCpp &cli);
 void menuCuentas(ClienteCpp &cli);
 void menuDatosCliente(ClienteCpp &cli);
-void mostrarCuentas(ClienteCpp &cli, CuentaCpp *listaCuentas);
+void mostrarCuentas(ClienteCpp &cli);
 void cargarMovimientos(CuentaCpp &c);
 void mostrarMovimientos(CuentaCpp &c);
 void mostrarDatosCliente(ClienteCpp &cli);

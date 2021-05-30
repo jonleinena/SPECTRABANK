@@ -8,30 +8,7 @@
 using namespace std;
 namespace containers
 {
-    class ClienteCpp
-    {
-    private:
-        string dni;
-        string nombre;
-        string domicilio;
-        string email;
-        string fecNac;
-        unsigned int telf;
-
-    public:
-        ClienteCpp(string dni, string nombre, string domicilio, string fecNac, string email, unsigned int telf);
-        ClienteCpp(Cliente *cli);
-        ~ClienteCpp();
-        string getDni() const;
-        string getNombre() const;
-        string getDomicilio() const;
-        string getFecNac() const;
-        void setDomicilio(string domicilio);
-        string getEmail() const;
-        void setEmail(string email);
-        unsigned int getTelf() const;
-        void setTelf(unsigned int telf);
-    };
+    
 
     class MovimientoCpp
     {
@@ -77,7 +54,6 @@ namespace containers
         CuentaCpp(char *dniPropietario, char *iban, float saldo, char *fecCreacion); //constructor sin movimientos, para cuando se leen solo las CuentaCpps
         CuentaCpp(const CuentaCpp &c);
         CuentaCpp();
-        CuentaCpp &operator=(const CuentaCpp &c);
         ~CuentaCpp();
         string getDni() const;
         void setDni(string dni);
@@ -89,6 +65,35 @@ namespace containers
         void setFecCreacion(string fecCreacion);
         MovimientoCpp *getMovimientos() const;
         void setMovimientos(MovimientoCpp *mov);
+    };
+    class ClienteCpp
+    {
+    private:
+        string dni;
+        string nombre;
+        string domicilio;
+        string email;
+        string fecNac;
+        unsigned int telf;
+        containers::CuentaCpp *cuentas;
+        int numeroCuentas;
+
+    public:
+        ClienteCpp(string dni, string nombre, string domicilio, string fecNac, string email, unsigned int telf);
+        ClienteCpp(Cliente *cli);
+        ~ClienteCpp();
+        string getDni() const;
+        string getNombre() const;
+        string getDomicilio() const;
+        string getFecNac() const;
+        void setDomicilio(string domicilio);
+        string getEmail() const;
+        void setEmail(string email);
+        unsigned int getTelf() const;
+        void setTelf(unsigned int telf);
+        void setCuenta(CuentaCpp &cue);
+        containers::CuentaCpp *getCuentas();
+        int getNumCuentas();
     };
 
     class InversionCpp

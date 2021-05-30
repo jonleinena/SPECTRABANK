@@ -33,7 +33,7 @@ typedef struct
 typedef struct
 {
     Cliente *cli;
-    char idCompania[5];
+    char idCompania[6];
     float valorCompra;
     int cantidad;
     char fechaCompra[20];

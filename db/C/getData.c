@@ -8,21 +8,21 @@
 
 int numFilas = 1;
 
-int getLogin(char *email, char *contrasenya, int userType) //userType=0 -> Cliente / userType=1 -> Profesional
+int getLogin(char *id, char *contrasenya, int userType) //userType=0 -> Cliente / userType=1 -> Profesional
 {
     int comprobacionContrasenya = 0; //0 si es igual, diferente a 0 sino
     int rc;
     char *err_msg = 0;
     sqlite3_stmt *res;
 
-    char *sql = "SELECT C.CONTRASENYA, P.CONTRASENYA FROM PROFESIONAL P, CLIENTE C WHERE P.CORREO = ? OR C.CORREO = ?";
+    char *sql = "SELECT C.CONTRASENYA, P.CONTRASENYA FROM PROFESIONAL P, CLIENTE C WHERE P.ID_PROF = ? OR C.DNI = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, email, (strlen(email) - userType), SQLITE_STATIC);
-        sqlite3_bind_text(res, 2, email, (strlen(email) - userType), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+        sqlite3_bind_text(res, 1, id, (strlen(id) - userType), SQLITE_STATIC);
+        sqlite3_bind_text(res, 2, id, (strlen(id) - userType), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {
@@ -33,7 +33,7 @@ int getLogin(char *email, char *contrasenya, int userType) //userType=0 -> Clien
 
     if (step == SQLITE_ROW)
     {
-        comprobacionContrasenya = strcmp(contrasenya, sqlite3_column_text(res, userType));
+        comprobacionContrasenya = strcmp(contrasenya, (const char *)sqlite3_column_text(res, userType));
     }
     else
         comprobacionContrasenya = 1;
@@ -41,7 +41,7 @@ int getLogin(char *email, char *contrasenya, int userType) //userType=0 -> Clien
     return comprobacionContrasenya;
 }
 
-Profesional *getInfoProfesional(char *email)
+Profesional *getInfoProfesional(char *id)
 {
     int rc;
     char *err_msg = 0;
@@ -50,13 +50,13 @@ Profesional *getInfoProfesional(char *email)
     prof = (Profesional *)malloc(sizeof(Profesional));
     prof->user = (Usuario *)malloc(sizeof(Usuario));
 
-    char *sql = "SELECT * FROM PROFESIONAL WHERE CORREO = ?";
+    char *sql = "SELECT * FROM PROFESIONAL WHERE ID_PROF = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, email, (strlen(email) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+        sqlite3_bind_text(res, 1, id, (strlen(id) - 1), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {
@@ -68,12 +68,12 @@ Profesional *getInfoProfesional(char *email)
     if (step == SQLITE_ROW)
     {
 
-        strcpy(prof->user->dni, sqlite3_column_text(res, 5));
-        strcpy(prof->user->contrasenya, sqlite3_column_text(res, 1));
-        strcpy(prof->user->email, sqlite3_column_text(res, 4));
-        strcpy(prof->user->fechaNacimiento, sqlite3_column_text(res, 3));
-        strcpy(prof->user->nombreApellidos, sqlite3_column_text(res, 2));
-        strcpy(prof->idProfesional, sqlite3_column_text(res, 0));
+        strcpy(prof->user->dni, (const char *)sqlite3_column_text(res, 5));
+        strcpy(prof->user->contrasenya, (const char *)sqlite3_column_text(res, 1));
+        strcpy(prof->user->email, (const char *)sqlite3_column_text(res, 4));
+        strcpy(prof->user->fechaNacimiento, (const char *)sqlite3_column_text(res, 3));
+        strcpy(prof->user->nombreApellidos, (const char *)sqlite3_column_text(res, 2));
+        strcpy(prof->idProfesional, (const char *)sqlite3_column_text(res, 0));
         prof->user->telefono = sqlite3_column_int(res, 6);
     }
 
@@ -81,7 +81,7 @@ Profesional *getInfoProfesional(char *email)
     free(prof);
 }
 
-Cliente *getInfoCliente(char *email)
+Cliente *getInfoCliente(char *dni)
 {
     int rc;
     char *err_msg = 0;
@@ -90,13 +90,13 @@ Cliente *getInfoCliente(char *email)
     cli = (Cliente *)malloc(sizeof(Cliente));
     cli->user = (Usuario *)malloc(sizeof(Usuario));
 
-    char *sql = "SELECT * FROM CLIENTE WHERE CORREO = ?";
+    char *sql = "SELECT * FROM CLIENTE WHERE DNI = ?";
 
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
     if (rc == SQLITE_OK)
     {
-        sqlite3_bind_text(res, 1, email, strlen(email), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
+        sqlite3_bind_text(res, 1, dni, strlen(dni), SQLITE_STATIC); //Le pasamos el (strlen(email)-1) para que ignore el /0 del email, si no no funciona
     }
     else
     {
@@ -108,13 +108,13 @@ Cliente *getInfoCliente(char *email)
     if (step == SQLITE_ROW)
     {
 
-        strcpy(cli->user->dni, sqlite3_column_text(res, 0));
-        strcpy(cli->user->contrasenya, sqlite3_column_text(res, 1));
-        strcpy(cli->user->nombreApellidos, sqlite3_column_text(res, 2));
+        strcpy(cli->user->dni, (const char *)sqlite3_column_text(res, 0));
+        strcpy(cli->user->contrasenya, (const char *)sqlite3_column_text(res, 1));
+        strcpy(cli->user->nombreApellidos, (const char *)sqlite3_column_text(res, 2));
         cli->user->telefono = sqlite3_column_int(res, 3);
-        strcpy(cli->user->email, sqlite3_column_text(res, 4));
-        strcpy(cli->domicilio, sqlite3_column_text(res, 5));
-        strcpy(cli->user->fechaNacimiento, sqlite3_column_text(res, 6));
+        strcpy(cli->user->email, (const char *)sqlite3_column_text(res, 4));
+        strcpy(cli->domicilio, (const char *)sqlite3_column_text(res, 5));
+        strcpy(cli->user->fechaNacimiento, (const char *)sqlite3_column_text(res, 6));
     }
 
     sqlite3_finalize(res);
@@ -161,13 +161,13 @@ Cliente **getListaClientes(char *idProf)
 
     while (step == SQLITE_ROW)
     {
-        strcpy((*(lista + i))->user->dni, sqlite3_column_text(res, 0));
-        strcpy((*(lista + i))->user->contrasenya, sqlite3_column_text(res, 1));
-        strcpy((*(lista + i))->user->nombreApellidos, sqlite3_column_text(res, 2));
+        strcpy((*(lista + i))->user->dni, (const char *)sqlite3_column_text(res, 0));
+        strcpy((*(lista + i))->user->contrasenya, (const char *)sqlite3_column_text(res, 1));
+        strcpy((*(lista + i))->user->nombreApellidos, (const char *)sqlite3_column_text(res, 2));
         (*(lista + i))->user->telefono = sqlite3_column_int(res, 3);
-        strcpy((*(lista + i))->user->email, sqlite3_column_text(res, 4));
-        strcpy((*(lista + i))->domicilio, sqlite3_column_text(res, 5));
-        strcpy((*(lista + i))->user->fechaNacimiento, sqlite3_column_text(res, 6));
+        strcpy((*(lista + i))->user->email, (const char *)sqlite3_column_text(res, 4));
+        strcpy((*(lista + i))->domicilio, (const char *)sqlite3_column_text(res, 5));
+        strcpy((*(lista + i))->user->fechaNacimiento, (const char *)sqlite3_column_text(res, 6));
 
         i++;
         step = sqlite3_step(res);
@@ -210,10 +210,10 @@ Cuenta *getCuentasCliente(char *dniCliente)
     int i = 0;
     while (step == SQLITE_ROW)
     {
-        strcpy((listaCuentas + i)->iban, sqlite3_column_text(res, 0));
+        strcpy((listaCuentas + i)->iban, (const char *)sqlite3_column_text(res, 0));
         (listaCuentas + i)->saldo = sqlite3_column_double(res, 1);
-        strcpy((listaCuentas + i)->fechaCreacion, sqlite3_column_text(res, 2));
-        strcpy((listaCuentas + i)->dniPropietario, sqlite3_column_text(res, 3));
+        strcpy((listaCuentas + i)->fechaCreacion, (const char *)sqlite3_column_text(res, 2));
+        strcpy((listaCuentas + i)->dniPropietario, (const char *)sqlite3_column_text(res, 3));
 
         step = sqlite3_step(res);
         i++;
@@ -255,16 +255,15 @@ Inversion *getInversionClite(char *dniCliente)
     int i = 0;
     while (step == SQLITE_ROW)
     {
-        strcpy((listaInversiones + i)->idCompania, sqlite3_column_text(res, 1));
+        strcpy((listaInversiones + i)->idCompania, (const char *)sqlite3_column_text(res, 1));
         (listaInversiones + i)->valorCompra = sqlite3_column_double(res, 2);
         (listaInversiones + i)->cantidad = sqlite3_column_double(res, 3);
-        strcpy((listaInversiones + i)->fechaCompra, sqlite3_column_text(res, 4));
+        strcpy((listaInversiones + i)->fechaCompra, (const char *)sqlite3_column_text(res, 4));
         i++;
         step = sqlite3_step(res);
     }
 
     return listaInversiones;
-    free(listaInversiones);
 }
 
 Prestamo *getPrestamos(char *dniCliente)
@@ -300,20 +299,18 @@ Prestamo *getPrestamos(char *dniCliente)
     while (step == SQLITE_ROW)
     {
         (listaPrestamos + i)->idPres = sqlite3_column_int(res, 0);
-        strcpy((listaPrestamos + i)->idProfesional, sqlite3_column_text(res, 2));
+        strcpy((listaPrestamos + i)->idProfesional, (const char *)sqlite3_column_text(res, 2));
         (listaPrestamos + i)->importe = sqlite3_column_double(res, 3);
-        strcpy((listaPrestamos + i)->fechaEmision, sqlite3_column_text(res, 4));
-        sqlite3_column_text(res, 5) == NULL ? strcpy((listaPrestamos + i)->fechaDevol, "NULL") : strcpy((listaPrestamos + i)->fechaDevol, sqlite3_column_text(res, 5));
-        sqlite3_column_text(res, 6) == NULL ? strcpy((listaPrestamos + i)->fechaComp, "NULL") : strcpy((listaPrestamos + i)->fechaComp, sqlite3_column_text(res, 6));
+        strcpy((listaPrestamos + i)->fechaEmision, (const char *)sqlite3_column_text(res, 4));
+        sqlite3_column_text(res, 5) == NULL ? strcpy((listaPrestamos + i)->fechaDevol, "NULL") : strcpy((listaPrestamos + i)->fechaDevol, (const char *)sqlite3_column_text(res, 5));
+        sqlite3_column_text(res, 6) == NULL ? strcpy((listaPrestamos + i)->fechaComp, "NULL") : strcpy((listaPrestamos + i)->fechaComp, (const char *)sqlite3_column_text(res, 6));
         (listaPrestamos + i)->tae = sqlite3_column_double(res, 7);
-        printf("%f\n", (listaPrestamos + i)->tae);
 
         i++;
         step = sqlite3_step(res);
     }
 
     return listaPrestamos;
-    free(listaPrestamos);
 }
 
 Movimiento *getMovimientos(char *iban)
@@ -351,17 +348,16 @@ Movimiento *getMovimientos(char *iban)
     while (step == SQLITE_ROW)
     {
         (movimientos + i)->idTransaccion = sqlite3_column_int(res, 0);
-        strcpy((movimientos + i)->ibanOrigen, sqlite3_column_text(res, 1));
-        strcpy((movimientos + i)->ibanDestino, sqlite3_column_text(res, 2));
+        strcpy((movimientos + i)->ibanOrigen, (const char *)sqlite3_column_text(res, 1));
+        strcpy((movimientos + i)->ibanDestino, (const char *)sqlite3_column_text(res, 2));
         (movimientos + i)->importe = sqlite3_column_double(res, 3);
-        strcpy((movimientos + i)->fecha, sqlite3_column_text(res, 4));
-        strcpy((movimientos + i)->concepto, sqlite3_column_text(res, 5));
+        strcpy((movimientos + i)->fecha, (const char *)sqlite3_column_text(res, 4));
+        strcpy((movimientos + i)->concepto, (const char *)sqlite3_column_text(res, 5));
         i++;
         step = sqlite3_step(res);
     }
 
     return movimientos;
-    free(movimientos);
 }
 
 Prestamo *getSolicitudesPrestamo(Profesional *prof)
@@ -399,15 +395,14 @@ Prestamo *getSolicitudesPrestamo(Profesional *prof)
         (listaPrestamosPendientes + i)->idPres = sqlite3_column_int(res, 0);
         (listaPrestamosPendientes + i)->cli = malloc(sizeof(Cliente));
         (listaPrestamosPendientes + i)->cli->user = malloc(sizeof(Usuario));
-        strcpy((listaPrestamosPendientes + i)->cli->user->dni, sqlite3_column_text(res, 1));
+        strcpy((listaPrestamosPendientes + i)->cli->user->dni, (const char *)sqlite3_column_text(res, 1));
         (listaPrestamosPendientes + i)->importe = sqlite3_column_double(res, 3);
-        strcpy((listaPrestamosPendientes + i)->fechaSoli, sqlite3_column_text(res, 4));
+        strcpy((listaPrestamosPendientes + i)->fechaSoli, (const char *)sqlite3_column_text(res, 4));
         i++;
         step = sqlite3_step(res);
     }
 
     return listaPrestamosPendientes;
-    free(listaPrestamosPendientes);
 }
 
 int *getCountTipoPrestamo(char *dniCli)
@@ -446,12 +441,10 @@ int *getCountTipoPrestamo(char *dniCli)
 
     if (step1 == SQLITE_ROW && step2 == SQLITE_ROW && step3 == SQLITE_ROW)
     {
-        printf("ResultadoColumna: %i\n", sqlite3_column_int(res1, 0));
         *estados = sqlite3_column_int(res1, 0);
         *(estados + 1) = sqlite3_column_int(res2, 0);
         *(estados + 2) = sqlite3_column_int(res3, 0);
     }
 
     return estados;
-    free(estados);
 }

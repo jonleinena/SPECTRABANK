@@ -11,8 +11,8 @@
 void loginProfesional(void)
 {
     int resultLogin = 0;
-    char *email;
-    email = malloc(30 * sizeof(char));
+    char *dni;
+    dni = malloc(30 * sizeof(char));
     char *contrasenya;
     contrasenya = malloc(18 * sizeof(char));
     Profesional *prof;
@@ -21,37 +21,32 @@ void loginProfesional(void)
     printf("INICIAR SESION\n");
     do
     {
-        printf("Introduce el correo electronico: ");
-        fgets(email, 30, stdin);
-        sscanf(email, "%c", email);
+        printf("Introduce el DNI: ");
+        fgets(dni, 30, stdin);
+        sscanf(dni, "%c", dni);
         fflush(stdin);
 
-        printf("Introduce contrase%ca: ", 164);
+        printf("Introduce contraseña: ");
         fgets(contrasenya, 18, stdin);
         sscanf(contrasenya, "%c", contrasenya);
         fflush(stdin);
         *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
 
-        if (startConn != SQLITE_OK)
-        {
-            resultLogin = getLogin(email, contrasenya, 1);
-        }
-        else
-            break;
+        resultLogin = getLogin(dni, contrasenya, 1);
 
         if (resultLogin == 0)
         {
             printf("%sINICIO DE SESION CORRECTO\n", FGREN);
             printf(CLEAR);
-            prof = getInfoProfesional(email);
+            prof = getInfoProfesional(dni);
             menuProfesional(prof);
         }
         else
             printf(FRED "Error en el inicio de sesion\n" FCYAN);
     } while (resultLogin != 0);
 
-    free(email);
-    email = NULL;
+    free(dni);
+    dni = NULL;
     free(contrasenya);
     contrasenya = NULL;
     free(prof->user);

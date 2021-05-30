@@ -21,18 +21,18 @@ void loginCliente(void)
 {
 
     int resultLogin = 0;
-    char *email;
-    email = (char *)malloc(30 * sizeof(char));
+    char *dni;
+    dni = new char[30];
     char *contrasenya;
-    contrasenya = (char *)malloc(18 * sizeof(char));
+    contrasenya = new char[18];
 
     cout << "**********************Bienvenido**********************" << endl;
     cout << "INICIAR SESION" << endl;
 
     do
     {
-        cout << "Introduce el correo electronico: ";
-        cin >> email;
+        cout << "Introduce el DNI: ";
+        cin >> dni;
         cout << endl;
 
         cout << "Introduce contrasena: " << endl;
@@ -41,24 +41,19 @@ void loginCliente(void)
 
         // *(contrasenya + strlen(contrasenya) - 1) = '\0'; //para quitar el salto de linea que añade sscanf
 
-        if (startConn != SQLITE_OK)
-        {
-            resultLogin = getLogin(email, contrasenya, 0);
-        }
-        else
-            break;
+        resultLogin = getLogin(dni, contrasenya, 0);
 
         if (resultLogin == 0)
         {
             cout << FGREN "INICIO DE SESION CORRECTO" << endl;
             cout << CLEAR << endl;
-            ClienteCpp c(getInfoCliente(email));
+            ClienteCpp c(getInfoCliente(dni));
             menuCliente(c);
         }
         else
             cout << FRED << "Error en el inicio de sesion" << FCYAN << endl;
     } while (resultLogin != 0);
 
-    delete[] email;
+    delete[] dni;
     delete[] contrasenya;
 }

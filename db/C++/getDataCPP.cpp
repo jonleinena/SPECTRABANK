@@ -10,7 +10,7 @@ containers::Inversiones *getInversiones(string dni)
 {
     sqlite3_stmt *res, *res1;
     const char *SQL = "SELECT * FROM ACC_CLI WHERE DNI = ?";
-    const char *SQL1 = "SELECT * FROM ACC_CLI WHERE DNI = ?";
+    const char *SQL1 = "SELECT COUNT(*) FROM ACC_CLI WHERE DNI = ?";
 
     int rc = sqlite3_prepare_v2(db, SQL, -1, &res, 0);
     int rc1 = sqlite3_prepare_v2(db, SQL1, -1, &res1, 0);

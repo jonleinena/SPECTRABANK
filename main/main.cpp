@@ -88,8 +88,7 @@ int main(void)
                "1.- Inicio de sesion como profesional\n"
                "2.- Inicio de sesion como cliente\n"
                "q.- Cerrar\n\n"
-               "Inserte selecci%cn: ",
-               162);
+               "Inserte selección: ");
 
         fgets(input, 2, stdin);
         sscanf(input, "%c", input);

@@ -43,6 +43,12 @@ void menuProfesional(Profesional *prof)
             printf(CLEAR);
             imprimirListaClientes(lista);
             printf("\n");
+            for (int i = 0; i < numFilas; i++)
+            {
+                free((*(lista + i))->user);
+                free(*(lista + i));
+            }
+            free(lista);
             break;
         case '2':
             verSolicitudesPrestamo(prof);
@@ -52,19 +58,14 @@ void menuProfesional(Profesional *prof)
             break;
         case 'q':
             printf(FRED "\nSaliendo.\n\n");
-            for (int i = 0; i < numFilas; i++)
-            {
-                free((*(lista + i))->user);
-                free(*(lista + i));
-            }
-            free(lista);
-            free(input);
             break;
         default:
             printf(FRED "\nIntroduce una opcion valida, por favor.\n\n");
             break;
         }
     } while (*input != 'q');
+    free(input);
+     
 }
 
 void imprimirListaClientes(Cliente **lista)
@@ -269,7 +270,6 @@ void mostrarPrestamos(Cliente *cli)
 {
     char *input;
     input = malloc(sizeof(char));
-
     printf(CLEAR);
 
     do

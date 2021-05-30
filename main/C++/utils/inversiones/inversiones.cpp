@@ -1,28 +1,19 @@
 #include "stockAPI.h"
 #include <iostream>
 #include <stdio.h>
+#include <string.h>
 #include "inversiones.h"
 #include "../containers/containers.h"
-#include "../../../db/C++/getDataCPP.h"
-#include "../../../main/C/utils/structures.h"
+#include "../../../../db/C++/getDataCPP.h"
+#include "../../../../db/C++/postDataCPP.h"
+#include "../../../C/utils/structures.h"
 #include "../../../../utils/colors.h"
-#include "../../../db/dbConnection.h"
+#include "../../../../db/dbConnection.h"
+#include "../../../../lib/sqlite3/sqlite3.h"
 
 using namespace stockAPI;
 using namespace std;
 using namespace containers;
-
-int main(void)
-{
-    if (startConn() == 0)
-    {
-        return 0;
-    }
-    ClienteCpp cli("1", "CLIENTE 1", "A", "2021/04/08", "CLIENTE1", 0);
-    cout << "hola" << endl;
-    menuInversiones(cli);
-    return 0;
-}
 
 void menuInversiones(ClienteCpp &cli)
 {
@@ -72,6 +63,7 @@ void verInversiones(ClienteCpp &cli)
     {
         printf("%-10s%-10d%-20.2f%-25s%-10.2f\n", (inversiones->getInversiones() + i)->getIdCompania(), (inversiones->getInversiones() + i)->getCantidad(), (inversiones->getInversiones() + i)->getValorCompra(), (inversiones->getInversiones() + i)->getFechaCompra(), (inversiones->getInversiones() + i)->getCantidad() * (inversiones->getInversiones() + i)->getValorCompra());
     }
+    
 }
 
 void comprarAcciones(ClienteCpp &cli)
@@ -109,13 +101,52 @@ void comprarAcciones(ClienteCpp &cli)
         }
         else
         {
-            //Falta proceso de compra
             cout << "La cotización actual de " << (*(searchResults + j - 1))->getSymbol() << " es " << (*(searchResults + j - 1))->getCurrentValue() << endl;
+            int amount;
+            cout << "Introduzca la cantidad a comprar (solo valores enteros): ";
+            cin >> amount;
+            cout << "Realizando compra..." << endl;
+            cout << endl;
+            int resCompra = comprarAcciones(*searchResults[j - 1], amount, cli);
+            if (resCompra == 101)
+            {
+                cout << "Compra de acciones realizada con éxito" << endl;
+            }
+            else
+            {
+                cout << "Error al realizar la compra de acciones" << endl;
+            }
         }
     }
+    
 }
 
 void venderAcciones(ClienteCpp &cli)
 {
     //Falta proceso de venta
+    verInversiones(cli);
+    cout << "Introduce el id de la compania" << endl;
+    char *idComp = new char[6];
+    cin >> idComp;
+    Inversiones *inversiones = getInversiones(cli.getDni());
+    bool accEncontrada = false;
+    for (int i = 0; i < inversiones->getCount(); i++)
+    {
+        if (strcmp((inversiones->getInversiones() + i)->getIdCompania(), idComp) == 0)
+            {
+                accEncontrada = true;
+                cout << "Introduce la cantidad de acciones que quieras vender de " << (inversiones->getInversiones() + i)->getIdCompania() << endl;
+                int numAcciones;
+                cin >> numAcciones;
+                if (numAcciones <= (inversiones->getInversiones() + i)->getCantidad())
+                    {
+                        cout << "Realizando venta..." << endl;
+                        int res =  venderAcciones((inversiones->getInversiones() + i)->getCantidad() - numAcciones, cli, idComp);
+
+                        if(res == 101) cout << "Venta realizada con exito" << endl;
+                    }
+                else
+                    cout << "No se pueden vender mas acciones de las que se tienen en posesion." << endl;
+            } 
+    } if ( accEncontrada == false) cout << "no se ha encontrado el id de la compania" << endl;
 }

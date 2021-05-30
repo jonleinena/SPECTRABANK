@@ -15,6 +15,8 @@ containers::ClienteCpp::ClienteCpp(string dni, string nombre, string domicilio, 
     this->fecNac = fecNac;
     this->email = email;
     this->telf = telf;
+    this->numeroCuentas = 0;
+    this->cuentas = new CuentaCpp[5];
 }
 containers::ClienteCpp::ClienteCpp(Cliente *cli)
 {
@@ -24,9 +26,12 @@ containers::ClienteCpp::ClienteCpp(Cliente *cli)
     this->email = string(cli->user->email);
     this->fecNac = string(cli->user->fechaNacimiento);
     this->telf = cli->user->telefono;
+    this->numeroCuentas = 0;
+    this->cuentas = new CuentaCpp[5];
 }
 containers::ClienteCpp::~ClienteCpp()
 {
+    delete[](this->cuentas);
 }
 string containers::ClienteCpp::getDni() const
 {
@@ -64,7 +69,19 @@ void containers::ClienteCpp::setTelf(unsigned int telf)
 {
     this->telf = telf;
 }
-
+void containers::ClienteCpp::setCuenta(CuentaCpp &cue)
+{
+    this->cuentas[this->numeroCuentas] = cue;
+    this->numeroCuentas++;
+}
+containers::CuentaCpp *containers::ClienteCpp::getCuentas()
+{
+    return this->cuentas;
+}
+int containers::ClienteCpp::getNumCuentas()
+{
+    return this->numeroCuentas;
+}
 //CuentaCpp
 containers::CuentaCpp::CuentaCpp(string dniPropietario, string iban, float saldo, string fecCreacion, MovimientoCpp *movimientos)
 {
@@ -90,14 +107,7 @@ containers::CuentaCpp::CuentaCpp(const CuentaCpp &c)
     this->fecCreacion = c.getFecCreacion();
     this->movimientos = new MovimientoCpp[10];
 }
-containers::CuentaCpp &containers::CuentaCpp::operator=(const containers::CuentaCpp &c)
-{
-    this->dniPropietario = c.getDni();
-    this->iban = c.getIban();
-    this->saldo = c.getSaldo();
-    this->fecCreacion = c.getFecCreacion();
-    this->movimientos = new MovimientoCpp[10];
-}
+
 containers::CuentaCpp::CuentaCpp()
 {
     this->dniPropietario = "a";
